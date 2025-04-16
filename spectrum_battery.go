@@ -1,0 +1,64 @@
+package tinysa
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
+// GetBatteryVoltage returns battery voltage in mV.
+func (d *Device) GetBatteryVoltage() (uint, error) {
+	d.logger.Info("retrieving battery voltage")
+
+	line, err := d.sendCommand("vbat")
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := parseBatteryVoltageLine(line)
+	if err != nil {
+		d.logger.Error("failed to parse battery voltage", "err", err, "line", line)
+		return 0, fmt.Errorf("%w: failed to parse battery voltage: %v", ErrCommandFailed, err)
+	}
+
+	return result, nil
+}
+
+// GetBatteryOffsetVoltage gets battery offset voltage in mV.
+func (d *Device) GetBatteryOffsetVoltage() (uint, error) {
+	d.logger.Info("retrieving battery voltage")
+
+	res, err := d.sendCommand("vbat_offset")
+	if err != nil {
+		return 0, err
+	}
+
+	vbatOffset, err := strconv.ParseInt(res, 10, 16)
+	if err != nil {
+		return 0, fmt.Errorf("%w: failed to parse battery offset voltage: %v", ErrCommandFailed, err)
+	}
+
+	return uint(vbatOffset), nil
+}
+
+// SetBatteryOffsetVoltage sets battery offset voltage in mV.
+func (d *Device) SetBatteryOffsetVoltage(voltage uint) error {
+	d.logger.Info("setting battery voltage", "voltage", voltage)
+	_, err := d.sendCommand(fmt.Sprintf("vbat_offset %d", voltage))
+	return err
+}
+
+// parseBatteryVoltageLine parses a battery response into a uint.
+func parseBatteryVoltageLine(line string) (uint, error) {
+	parts := strings.Split(line, " ")
+	if len(parts) != 2 {
+		return 0, fmt.Errorf("%w: expected 2 fields, got %d", ErrCommandFailed, len(parts))
+	}
+
+	vbat, err := strconv.ParseInt(parts[0], 10, 16)
+	if err != nil {
+		return 0, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
+	}
+
+	return uint(vbat), nil
+}
