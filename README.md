@@ -18,8 +18,8 @@ The `go-tinysa` is a sdk for controlling and interacting with the [tinySA](https
 - Send raw commands
 - And more, check out the [go reference](https://pkg.go.dev/github.com/kkettinger/go-tinysa)
 
-_Note:_ The SDK is developed by using a tinySA ultra with the firmware version `v1.4-197`.
-If you experience problems with the basic model or another firmware, please create an issue in GitHub.
+_Note:_ The SDK was developed by using a tinySA Ultra with firmware version `v1.4-197`.
+If you encounter issues with the basic model or a different firmware version, please report them on GitHub.
 
 ## Use
 To use the sdk, run `go get github.com/kkettinger/go-tinysa` inside your golang project folder.
