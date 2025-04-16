@@ -2,8 +2,6 @@ package tinysa
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 )
 
 type Sweep struct {
@@ -72,7 +70,7 @@ func (d *Device) GetSweep() (Sweep, error) {
 	if err != nil {
 		return Sweep{}, err
 	}
-
+	
 	sweep, err := parseSweepResponse(line)
 	if err != nil {
 		d.logger.Error("failed to parse sweep response", "line", line, "err", err)
@@ -189,33 +187,4 @@ func (d *Device) ResumeSweep() error {
 	d.logger.Info("resuming sweep")
 	_, err := d.sendCommand("resume")
 	return err
-}
-
-// parseSweepResponse parses a sweep response like `450000000 600000000 450` into a Sweep struct.
-func parseSweepResponse(line string) (Sweep, error) {
-	parts := strings.Split(line, " ")
-	if len(parts) != 3 {
-		return Sweep{}, fmt.Errorf("%w: expected 3 fields, got %d", ErrCommandFailed, len(parts))
-	}
-
-	sweepStart, err := strconv.ParseInt(parts[0], 10, 64)
-	if err != nil {
-		return Sweep{}, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
-	}
-
-	sweepStop, err := strconv.ParseInt(parts[1], 10, 64)
-	if err != nil {
-		return Sweep{}, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
-	}
-
-	sweepPoints, err := strconv.ParseInt(parts[2], 10, 64)
-	if err != nil {
-		return Sweep{}, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
-	}
-
-	return Sweep{
-		Start:  uint64(sweepStart),
-		Stop:   uint64(sweepStop),
-		Points: uint(sweepPoints),
-	}, nil
 }

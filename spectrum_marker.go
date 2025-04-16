@@ -2,7 +2,6 @@ package tinysa
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 )
 
@@ -101,39 +100,4 @@ func (d *Device) DisableMarkerDelta(markerId uint) error {
 	d.logger.Info("disabling marker delta", "marker_id", markerId)
 	_, err := d.sendCommand(fmt.Sprintf("marker %d delta off", markerId))
 	return err
-}
-
-// parseMarkerResultLine parses a marker response line like `1 216 522167037 -9.08e+01` into a Marker struct.
-func parseMarkerResultLine(line string) (Marker, error) {
-	fields := strings.Fields(line)
-	if len(fields) != 4 {
-		return Marker{}, fmt.Errorf("%w: expected 4 fields, got %d", ErrCommandFailed, len(fields))
-	}
-
-	marker, err := strconv.ParseUint(fields[0], 10, 0)
-	if err != nil {
-		return Marker{}, fmt.Errorf("%w: invalid marker %q: %b", ErrCommandFailed, fields[0], err)
-	}
-
-	index, err := strconv.ParseUint(fields[1], 10, 0)
-	if err != nil {
-		return Marker{}, fmt.Errorf("%w: ErrCommandFailedinvalid index %q: %b", ErrCommandFailed, fields[1], err)
-	}
-
-	freq, err := strconv.ParseUint(fields[2], 10, 64)
-	if err != nil {
-		return Marker{}, fmt.Errorf("%w: invalid frequency %q: %b", ErrCommandFailed, fields[2], err)
-	}
-
-	val, err := strconv.ParseFloat(fields[3], 64)
-	if err != nil {
-		return Marker{}, fmt.Errorf("%w: invalid value %q: %v", ErrCommandFailed, fields[3], err)
-	}
-
-	return Marker{
-		Marker:    uint(marker),
-		Index:     uint(index),
-		Frequency: freq,
-		Value:     val,
-	}, nil
 }

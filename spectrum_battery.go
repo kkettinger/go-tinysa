@@ -3,7 +3,6 @@ package tinysa
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 // GetBatteryVoltage returns battery voltage in mV.
@@ -46,19 +45,4 @@ func (d *Device) SetBatteryOffsetVoltage(voltage uint) error {
 	d.logger.Info("setting battery voltage", "voltage", voltage)
 	_, err := d.sendCommand(fmt.Sprintf("vbat_offset %d", voltage))
 	return err
-}
-
-// parseBatteryVoltageLine parses a battery response into a uint.
-func parseBatteryVoltageLine(line string) (uint, error) {
-	parts := strings.Split(line, " ")
-	if len(parts) != 2 {
-		return 0, fmt.Errorf("%w: expected 2 fields, got %d", ErrCommandFailed, len(parts))
-	}
-
-	vbat, err := strconv.ParseInt(parts[0], 10, 16)
-	if err != nil {
-		return 0, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
-	}
-
-	return uint(vbat), nil
 }
