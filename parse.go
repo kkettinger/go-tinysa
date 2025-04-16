@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-// parseBatteryVoltageLine parses a battery response into a uint.
+// parseBatteryResponse parses a battery response into a uint voltage (mV).
 //
 // Example response: `4191 mV`
-func parseBatteryVoltageLine(line string) (uint, error) {
-	parts := strings.Split(line, " ")
+func parseBatteryResponse(response string) (uint, error) {
+	parts := strings.Split(response, " ")
 	if len(parts) != 2 {
 		return 0, fmt.Errorf("%w: expected 2 fields, got %d", ErrCommandFailed, len(parts))
 	}
@@ -27,10 +27,10 @@ func parseBatteryVoltageLine(line string) (uint, error) {
 	return uint(vbat), nil
 }
 
-// parseMarkerResultLine parses a marker response into a Marker struct.
+// parseMarkerResponseLine parses a single line of a marker response into a Marker struct.
 //
-// Example response: `1 216 522167037 -9.08e+01` (single line)
-func parseMarkerResultLine(line string) (Marker, error) {
+// Example response: `1 216 522167037 -9.08e+01`
+func parseMarkerResponseLine(line string) (Marker, error) {
 	fields := strings.Fields(line)
 	if len(fields) != 4 {
 		return Marker{}, fmt.Errorf("%w: expected 4 fields, got %d", ErrCommandFailed, len(fields))
@@ -67,8 +67,8 @@ func parseMarkerResultLine(line string) (Marker, error) {
 // parseSweepResponse parses a sweep response into a Sweep struct.
 //
 // Example response: `450000000 600000000 450`
-func parseSweepResponse(line string) (Sweep, error) {
-	parts := strings.Split(line, " ")
+func parseSweepResponse(response string) (Sweep, error) {
+	parts := strings.Split(response, " ")
 	if len(parts) != 3 {
 		return Sweep{}, fmt.Errorf("%w: expected 3 fields, got %d", ErrCommandFailed, len(parts))
 	}
@@ -95,10 +95,10 @@ func parseSweepResponse(line string) (Sweep, error) {
 	}, nil
 }
 
-// parseTraceValue parses a trace response into a TraceValue struct.
+// parseTraceValueResponseLine parses a single line of a trace value response into a TraceValue struct.
 //
-// Example response: `trace 1 value 442 -108.88` (single line)
-func parseTraceValue(line string) (TraceValue, error) {
+// Example response: `trace 1 value 442 -108.88`
+func parseTraceValueResponseLine(line string) (TraceValue, error) {
 	fields := strings.Fields(line)
 	if len(fields) != 5 {
 		return TraceValue{}, fmt.Errorf("%w: expected 5 fields, got %d", ErrCommandFailed, len(fields))
@@ -126,10 +126,10 @@ func parseTraceValue(line string) (TraceValue, error) {
 	}, nil
 }
 
-// parseTraceStatusLine parses a trace response into a Trace struct.
+// parseTraceResponseLine parses a single line of a trace response into a Trace struct.
 //
-// Example response: `1: dBm -30.000000000 10.000000000` (single line)
-func parseTraceStatusLine(line string) (Trace, error) {
+// Example response: `1: dBm -30.000000000 10.000000000`
+func parseTraceResponseLine(line string) (Trace, error) {
 	fields := strings.Fields(line)
 	if len(fields) != 4 {
 		return Trace{}, fmt.Errorf("%w: expected 4 fields, got %d", ErrCommandFailed, len(fields))

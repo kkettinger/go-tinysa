@@ -14,7 +14,7 @@ func (d *Device) GetBatteryVoltage() (uint, error) {
 		return 0, err
 	}
 
-	result, err := parseBatteryVoltageLine(line)
+	result, err := parseBatteryResponse(line)
 	if err != nil {
 		d.logger.Error("failed to parse battery voltage", "err", err, "line", line)
 		return 0, fmt.Errorf("%w: failed to parse battery voltage: %v", ErrCommandFailed, err)

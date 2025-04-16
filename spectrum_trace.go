@@ -151,7 +151,7 @@ func (d *Device) GetTrace(traceId uint) (Trace, error) {
 		return Trace{}, err
 	}
 
-	result, err := parseTraceStatusLine(line)
+	result, err := parseTraceResponseLine(line)
 	if err != nil {
 		d.logger.Error("failed to parse trace result", "trace_id", traceId, "line", line, "err", err)
 		return Trace{}, fmt.Errorf("%w: failed to parse trace result: %v", ErrCommandFailed, err)
@@ -172,7 +172,7 @@ func (d *Device) GetTraceAll() ([]Trace, error) {
 	var status []Trace
 	lines := strings.Split(statusStr, commandTerminator)
 	for _, line := range lines {
-		s, err := parseTraceStatusLine(line)
+		s, err := parseTraceResponseLine(line)
 		if err != nil {
 			d.logger.Error("failed to parse trace result", "line", line, "err", err)
 			return nil, fmt.Errorf("%w: failed to parse trace result: %v", ErrCommandFailed, err)
@@ -220,7 +220,7 @@ func (d *Device) GetTraceValues(traceId uint) ([]TraceValue, error) {
 
 	data := make([]TraceValue, len(dataList))
 	for i, line := range dataList {
-		data[i], err = parseTraceValue(line)
+		data[i], err = parseTraceValueResponseLine(line)
 		if err != nil {
 			d.logger.Error("failed to parse trace value", "trace_id", traceId, "line", line)
 			return nil, fmt.Errorf("%w: failed to parse trace result: %v", ErrCommandFailed, err)

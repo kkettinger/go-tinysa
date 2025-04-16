@@ -21,7 +21,7 @@ func (d *Device) GetMarker(markerId uint) (Marker, error) {
 		return Marker{}, err
 	}
 
-	result, err := parseMarkerResultLine(line)
+	result, err := parseMarkerResponseLine(line)
 	if err != nil {
 		d.logger.Error("failed to parse marker result", "line", line, "err", err)
 		return Marker{}, fmt.Errorf("%w: failed to parse marker result: %v", ErrCommandFailed, err)
@@ -42,7 +42,7 @@ func (d *Device) GetMarkerAll() ([]Marker, error) {
 	var status []Marker
 	lines := strings.Split(statusStr, commandTerminator)
 	for _, line := range lines {
-		if s, err := parseMarkerResultLine(line); err != nil {
+		if s, err := parseMarkerResponseLine(line); err != nil {
 			d.logger.Error("failed to parse marker result", "line", line, "err", err)
 			return nil, fmt.Errorf("%w: failed to parse marker result: %v", ErrCommandFailed, err)
 		} else {

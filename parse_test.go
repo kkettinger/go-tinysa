@@ -21,12 +21,12 @@ func TestParseBatteryVoltageLine(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseBatteryVoltageLine(tt.input)
+			got, err := parseBatteryResponse(tt.input)
 			if (err != nil) != tt.shouldErr {
-				t.Errorf("parseBatteryVoltageLine(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
+				t.Errorf("parseBatteryResponse(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
 			}
 			if got != tt.want {
-				t.Errorf("parseBatteryVoltageLine(%q) = %v, want %v", tt.input, got, tt.want)
+				t.Errorf("parseBatteryResponse(%q) = %v, want %v", tt.input, got, tt.want)
 			}
 		})
 	}
@@ -89,12 +89,12 @@ func TestParseMarkerResultLine(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseMarkerResultLine(tt.input)
+			got, err := parseMarkerResponseLine(tt.input)
 			if (err != nil) != tt.shouldErr {
-				t.Errorf("parseMarkerResultLine(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
+				t.Errorf("parseMarkerResponseLine(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
 			}
 			if !tt.shouldErr && got != tt.want {
-				t.Errorf("parseMarkerResultLine(%q) = %+v, want %+v", tt.input, got, tt.want)
+				t.Errorf("parseMarkerResponseLine(%q) = %+v, want %+v", tt.input, got, tt.want)
 			}
 		})
 	}
@@ -233,12 +233,12 @@ func TestParseTraceValue(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseTraceValue(tt.input)
+			got, err := parseTraceValueResponseLine(tt.input)
 			if (err != nil) != tt.shouldErr {
-				t.Errorf("parseTraceValue(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
+				t.Errorf("parseTraceValueResponseLine(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
 			}
 			if !tt.shouldErr && got != tt.want {
-				t.Errorf("parseTraceValue(%q) = %+v, want %+v", tt.input, got, tt.want)
+				t.Errorf("parseTraceValueResponseLine(%q) = %+v, want %+v", tt.input, got, tt.want)
 			}
 		})
 	}
@@ -307,12 +307,12 @@ func TestParseTraceStatusLine(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseTraceStatusLine(tt.input)
+			got, err := parseTraceResponseLine(tt.input)
 			if (err != nil) != tt.shouldErr {
-				t.Errorf("parseTraceStatusLine(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
+				t.Errorf("parseTraceResponseLine(%q) error = %v, wantErr = %v", tt.input, err, tt.shouldErr)
 			}
 			if !tt.shouldErr && got != tt.want {
-				t.Errorf("parseTraceStatusLine(%q) = %+v, want %+v", tt.input, got, tt.want)
+				t.Errorf("parseTraceResponseLine(%q) = %+v, want %+v", tt.input, got, tt.want)
 			}
 		})
 	}
