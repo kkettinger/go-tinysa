@@ -18,7 +18,7 @@ func (d *Device) Reset(dfu bool) error {
 	cmd := "reset"
 	if dfu {
 		if d.model != ModelBasic {
-			return ErrCommandNotSupportedByModel
+			return fmt.Errorf("%w: option dfu not supported by model %v", ErrOptionNotSupportedByModel, d.model)
 		}
 		cmd = cmd + " dfu"
 	}
