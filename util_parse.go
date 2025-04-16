@@ -12,14 +12,14 @@ func SweepModeFromString(s string) (SweepMode, bool) {
 	return SweepMode{}, false
 }
 
-// TraceUnitFromString parses a string into a DisplayUnit (case-insensitive).
-func TraceUnitFromString(s string) (DisplayUnit, bool) {
-	for k, v := range displayUnitMap {
+// TraceUnitFromString parses a string into a TraceUnit (case-insensitive).
+func TraceUnitFromString(s string) (TraceUnit, bool) {
+	for k, v := range traceUnitMap {
 		if strings.EqualFold(k, s) {
 			return v, true
 		}
 	}
-	return DisplayUnit{}, false
+	return TraceUnit{}, false
 }
 
 // TraceCalcFromString parses a string into a TraceCalc (case-insensitive).

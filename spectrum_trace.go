@@ -6,9 +6,65 @@ import (
 	"strings"
 )
 
+type TraceUnit struct {
+	value string
+}
+
+func (u TraceUnit) String() string {
+	return u.value
+}
+
+func (u TraceUnit) IsValid() bool {
+	return u.value != ""
+}
+
+const (
+	traceUnitRAW  string = "RAW"
+	traceUnitDBm  string = "dBm"
+	traceUnitDBmV string = "dBmV"
+	traceUnitDBuV string = "dBuV"
+	traceUnitV    string = "V"
+	traceUnitVpp  string = "Vpp"
+	traceUnitW    string = "W"
+)
+
+var (
+	TraceUnitRaw  = TraceUnit{traceUnitRAW}
+	TraceUnitDBm  = TraceUnit{traceUnitDBm}
+	TraceUnitDBmV = TraceUnit{traceUnitDBmV}
+	TraceUnitDBuV = TraceUnit{traceUnitDBuV}
+	TraceUnitV    = TraceUnit{traceUnitV}
+	TraceUnitVpp  = TraceUnit{traceUnitVpp}
+	TraceUnitW    = TraceUnit{traceUnitW}
+)
+
+var traceUnitMap = map[string]TraceUnit{
+	traceUnitRAW:  TraceUnitRaw,
+	traceUnitDBm:  TraceUnitDBm,
+	traceUnitDBmV: TraceUnitDBmV,
+	traceUnitDBuV: TraceUnitDBuV,
+	traceUnitV:    TraceUnitV,
+	traceUnitVpp:  TraceUnitVpp,
+	traceUnitW:    TraceUnitW,
+}
+
+var traceUnitOptions = []string{
+	traceUnitRAW,
+	traceUnitDBm,
+	traceUnitDBmV,
+	traceUnitDBuV,
+	traceUnitV,
+	traceUnitVpp,
+	traceUnitW,
+}
+
+func TraceUnitOptions() []string {
+	return traceUnitOptions
+}
+
 type Trace struct {
 	Trace  int // TODO: uint
-	Unit   DisplayUnit
+	Unit   TraceUnit
 	RefPos float64
 	Scale  float64
 }
@@ -242,6 +298,42 @@ func (d *Device) DisableTraceCalc(traceId uint) error {
 	return err
 }
 
+// SetTraceUnit sets the display unit to the specified value.
+func (d *Device) SetTraceUnit(unit TraceUnit) error {
+	d.logger.Info("setting display unit", "unit", unit)
+	_, err := d.sendCommand(fmt.Sprintf("trace %s", unit.value))
+	return err
+}
+
+// SetTraceRefLevel sets the display ref level to the specified value in dBm.
+func (d *Device) SetTraceRefLevel(levelDbm int) error {
+	d.logger.Info("setting trace ref level", "level", levelDbm)
+	_, err := d.sendCommand(fmt.Sprintf("trace reflevel %d", levelDbm))
+	return err
+}
+
+// SetTraceRefLevelAuto sets the display ref level to auto.
+func (d *Device) SetTraceRefLevelAuto() error {
+	d.logger.Info("setting trace ref level auto")
+	_, err := d.sendCommand("trace reflevel auto")
+	return err
+}
+
+// SetTraceScale sets the display scale to the specified value.
+func (d *Device) SetTraceScale(level int) error {
+	d.logger.Info("setting trace scale", "level", level)
+	_, err := d.sendCommand(fmt.Sprintf("trace scale %d", level))
+	return err
+}
+
+// SetTraceScaleAuto sets the display scale to auto.
+// TODO: doesn't seem to work
+func (d *Device) SetTraceScaleAuto() error {
+	d.logger.Info("setting display scale auto")
+	_, err := d.sendCommand("trace scale auto")
+	return err
+}
+
 // parseTraceValue parses a trace response like `trace <n> value` into a TraceValue struct.
 func parseTraceValue(line string) (TraceValue, error) {
 	fields := strings.Fields(line)
@@ -295,7 +387,7 @@ func parseTraceStatusLine(line string) (Trace, error) {
 
 	return Trace{
 		Trace:  trace,
-		Unit:   DisplayUnit{fields[1]},
+		Unit:   TraceUnit{fields[1]},
 		RefPos: refPos,
 		Scale:  scale,
 	}, nil
