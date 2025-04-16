@@ -326,14 +326,6 @@ func (d *Device) SetTraceScale(level int) error {
 	return err
 }
 
-// SetTraceScaleAuto sets the display scale to auto.
-// TODO: doesn't seem to work
-func (d *Device) SetTraceScaleAuto() error {
-	d.logger.Info("setting display scale auto")
-	_, err := d.sendCommand("trace scale auto")
-	return err
-}
-
 // parseTraceValue parses a trace response like `trace <n> value` into a TraceValue struct.
 func parseTraceValue(line string) (TraceValue, error) {
 	fields := strings.Fields(line)
