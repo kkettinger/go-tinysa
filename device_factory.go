@@ -13,7 +13,7 @@ func NewDevice(portName string, opts ...DeviceOption) (*Device, error) {
 	}
 
 	if options.logger == nil {
-		options.logger = NewNoopLogger()
+		options.logger = newNoopLogger()
 	}
 
 	logger := options.logger
@@ -54,7 +54,7 @@ func FindDevice(opts ...DeviceOption) (*Device, error) {
 	}
 
 	if options.logger == nil {
-		options.logger = NewNoopLogger()
+		options.logger = newNoopLogger()
 	}
 
 	logger := options.logger
