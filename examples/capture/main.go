@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	output := "tinysa_screenshot.bmp"
+	output := "tinysa_capture.bmp"
 
 	dev, err := tinysa.FindDevice()
 	if err != nil {
@@ -19,6 +19,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println(img.Bounds())
 
 	file, err := os.Create(output)
 	if err != nil {
