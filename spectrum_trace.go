@@ -154,7 +154,7 @@ func (d *Device) GetTrace(traceId uint) (Trace, error) {
 	result, err := parseTraceResponseLine(line)
 	if err != nil {
 		d.logger.Error("failed to parse trace result", "trace_id", traceId, "line", line, "err", err)
-		return Trace{}, fmt.Errorf("%w: failed to parse trace result: %v", ErrCommandFailed, err)
+		return Trace{}, fmt.Errorf("failed to parse trace result: %s", err.Error())
 	}
 
 	return result, nil
@@ -175,7 +175,7 @@ func (d *Device) GetTraceAll() ([]Trace, error) {
 		s, err := parseTraceResponseLine(line)
 		if err != nil {
 			d.logger.Error("failed to parse trace result", "line", line, "err", err)
-			return nil, fmt.Errorf("%w: failed to parse trace result: %v", ErrCommandFailed, err)
+			return nil, fmt.Errorf("failed to parse trace result: %s", err.Error())
 		}
 
 		status = append(status, s)
@@ -199,7 +199,7 @@ func (d *Device) GetTraceFrequencies() ([]uint64, error) {
 		freqInt, err := strconv.ParseUint(freq, 10, 64)
 		if err != nil {
 			d.logger.Error("failed to parse trace frequency", "freq", freq, "err", err)
-			return nil, fmt.Errorf("%w: failed to parse frequency %q as int: %v", ErrCommandFailed, freq, err)
+			return nil, fmt.Errorf("failed to parse frequency %q as int: %s", freq, err.Error())
 		}
 
 		result[i] = freqInt
@@ -223,7 +223,7 @@ func (d *Device) GetTraceValues(traceId uint) ([]TraceValue, error) {
 		data[i], err = parseTraceValueResponseLine(line)
 		if err != nil {
 			d.logger.Error("failed to parse trace value", "trace_id", traceId, "line", line)
-			return nil, fmt.Errorf("%w: failed to parse trace result: %v", ErrCommandFailed, err)
+			return nil, fmt.Errorf("failed to parse trace result: %s", err.Error())
 		}
 	}
 
@@ -248,7 +248,7 @@ func (d *Device) GetTraceData(traceId uint) ([]TraceData, error) {
 	lenFreq := len(frequencies)
 	if lenValues != lenFreq {
 		d.logger.Error("value and frequency values lengths do not match", "trace_id", traceId, "values", values, "frequencies", frequencies)
-		return nil, fmt.Errorf("%w: value and frequency values lengths do not match, %d != %d", ErrCommandFailed, lenValues, lenFreq)
+		return nil, fmt.Errorf("value and frequency values lengths do not match, %d != %d", lenValues, lenFreq)
 	}
 
 	data := make([]TraceData, lenValues)

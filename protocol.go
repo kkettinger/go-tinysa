@@ -94,7 +94,7 @@ func sendCommandBinaryInner(logger *slog.Logger, port serial.Port, fullCmd strin
 	logger.Debug("sending full command", "cmd", fullCmd)
 	if _, err := port.Write([]byte(fullCmd)); err != nil {
 		logger.Debug("failed to write command", "cmd", fullCmd, "err", err)
-		return bytes.Buffer{}, fmt.Errorf("cmd write failed: %v", err)
+		return bytes.Buffer{}, fmt.Errorf("cmd write failed: %s", err.Error())
 	}
 
 	buffer := make([]byte, 512)
@@ -111,12 +111,12 @@ func sendCommandBinaryInner(logger *slog.Logger, port serial.Port, fullCmd strin
 
 		n, err := port.Read(buffer)
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				logger.Debug("port eof occurred while reading response")
 				break
 			}
 			logger.Debug("failed to read response", "err", err)
-			return bytes.Buffer{}, fmt.Errorf("failed to read response: %v", err)
+			return bytes.Buffer{}, fmt.Errorf("failed to read response: %s", err.Error())
 		}
 
 		response.Write(buffer[:n])

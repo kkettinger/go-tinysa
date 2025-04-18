@@ -18,7 +18,7 @@ func (d *Device) Reset(dfu bool) error {
 	cmd := "reset"
 	if dfu {
 		if d.model != ModelBasic {
-			return fmt.Errorf("%w: option dfu not supported by model %v", ErrOptionNotSupportedByModel, d.model)
+			return fmt.Errorf("option `dfu` not supported by model %s", d.model)
 		}
 		cmd = cmd + " dfu"
 	}
@@ -31,16 +31,16 @@ func (d *Device) GetDeviceId() (uint, error) {
 	d.logger.Info("requesting device id")
 	res, err := d.sendCommand("deviceid")
 	if err != nil {
-		return 0, fmt.Errorf("%w: failed to get device id: %v", ErrCommandFailed, err)
+		return 0, fmt.Errorf("failed to get device id: %s", err.Error())
 	}
 
 	parts := strings.Split(res, " ")
 	if len(parts) != 2 && parts[0] != "deviceid" {
-		return 0, fmt.Errorf("%w: unexpected response for deviceid: %s", ErrCommandFailed, res)
+		return 0, fmt.Errorf("unexpected response for deviceid: %s", res)
 	}
 	id, err := strconv.Atoi(parts[1])
 	if err != nil {
-		return 0, fmt.Errorf("%w: failed to parse device id: %v", ErrCommandFailed, err)
+		return 0, fmt.Errorf("failed to parse device id: %s", err.Error())
 	}
 	return uint(id), nil
 }

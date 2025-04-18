@@ -17,7 +17,7 @@ func (d *Device) GetBatteryVoltage() (uint, error) {
 	result, err := parseBatteryResponse(line)
 	if err != nil {
 		d.logger.Error("failed to parse battery voltage", "err", err, "line", line)
-		return 0, fmt.Errorf("%w: failed to parse battery voltage: %v", ErrCommandFailed, err)
+		return 0, fmt.Errorf("failed to parse battery voltage: %s", err.Error())
 	}
 
 	return result, nil
@@ -34,7 +34,7 @@ func (d *Device) GetBatteryOffsetVoltage() (uint, error) {
 
 	vbatOffset, err := strconv.ParseInt(res, 10, 16)
 	if err != nil {
-		return 0, fmt.Errorf("%w: failed to parse battery offset voltage: %v", ErrCommandFailed, err)
+		return 0, fmt.Errorf("failed to parse battery offset voltage: %s", err.Error())
 	}
 
 	return uint(vbatOffset), nil

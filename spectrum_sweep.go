@@ -70,11 +70,11 @@ func (d *Device) GetSweep() (Sweep, error) {
 	if err != nil {
 		return Sweep{}, err
 	}
-	
+
 	sweep, err := parseSweepResponse(line)
 	if err != nil {
 		d.logger.Error("failed to parse sweep response", "line", line, "err", err)
-		return Sweep{}, fmt.Errorf("%w: failed to parse sweep response: %v", ErrCommandFailed, err)
+		return Sweep{}, fmt.Errorf("failed to parse sweep response: %s", err.Error())
 	}
 
 	return sweep, nil
@@ -96,7 +96,7 @@ func (d *Device) GetSweepStatus() (SweepStatus, error) {
 		return SweepStatusResumed, nil
 	default:
 		d.logger.Error("unexpected sweep status", "sweep_status", res)
-		return SweepStatusUnknown, fmt.Errorf("%w: unexpected sweep status %s", ErrCommandFailed, res)
+		return SweepStatusUnknown, fmt.Errorf("unexpected sweep status %s", res)
 	}
 }
 

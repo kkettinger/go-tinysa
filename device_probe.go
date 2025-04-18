@@ -33,7 +33,7 @@ func probeDevice(logger *slog.Logger, port serial.Port, responseTimeout time.Dur
 		response, err := sendCommand(logger, port, "version", responseTimeout)
 		if err != nil {
 			logger.Debug("failed to send version command", "err", err)
-			return probeResult, fmt.Errorf("%w: failed sending version command: %w", ErrProbeFailed, err)
+			return probeResult, fmt.Errorf("failed sending version command: %s", err.Error())
 		}
 
 		matches := re.FindStringSubmatch(response)
@@ -51,7 +51,7 @@ func probeDevice(logger *slog.Logger, port serial.Port, responseTimeout time.Dur
 
 	if !found {
 		logger.Warn("no valid version response found, might not be a tinySA device")
-		return probeResult, fmt.Errorf("%w: no valid version response found, might not be a tinySA device", ErrProbeFailed)
+		return probeResult, fmt.Errorf("no valid version response found, might not be a tinySA device")
 	}
 
 	return probeResult, nil
@@ -62,7 +62,7 @@ func createDeviceFromProbe(logger *slog.Logger, port serial.Port, pr probeResult
 	cfg, ok := deviceModels[pr.model]
 	if !ok {
 		logger.Error("unknown model", "model", pr.model)
-		return nil, fmt.Errorf("%w: unknown model %s", ErrConnectionFailed, pr.model)
+		return nil, fmt.Errorf("unknown model %s", pr.model)
 	}
 
 	return &Device{

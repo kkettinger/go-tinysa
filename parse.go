@@ -12,16 +12,16 @@ import (
 func parseBatteryResponse(response string) (uint, error) {
 	parts := strings.Split(response, " ")
 	if len(parts) != 2 {
-		return 0, fmt.Errorf("%w: expected 2 fields, got %d", ErrCommandFailed, len(parts))
+		return 0, fmt.Errorf("expected 2 fields, got %d", len(parts))
 	}
 
 	vbat, err := strconv.ParseInt(parts[0], 10, 16)
 	if err != nil {
-		return 0, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
+		return 0, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
 
 	if vbat < 0 {
-		return 0, fmt.Errorf("%w: negative voltage", ErrCommandFailed)
+		return 0, fmt.Errorf("negative voltage")
 	}
 
 	return uint(vbat), nil
@@ -33,27 +33,27 @@ func parseBatteryResponse(response string) (uint, error) {
 func parseMarkerResponseLine(line string) (Marker, error) {
 	fields := strings.Fields(line)
 	if len(fields) != 4 {
-		return Marker{}, fmt.Errorf("%w: expected 4 fields, got %d", ErrCommandFailed, len(fields))
+		return Marker{}, fmt.Errorf("expected 4 fields, got %d", len(fields))
 	}
 
 	marker, err := strconv.ParseUint(fields[0], 10, 0)
 	if err != nil {
-		return Marker{}, fmt.Errorf("%w: invalid marker %q: %b", ErrCommandFailed, fields[0], err)
+		return Marker{}, fmt.Errorf("invalid marker %q: %s", fields[0], err.Error())
 	}
 
 	index, err := strconv.ParseUint(fields[1], 10, 0)
 	if err != nil {
-		return Marker{}, fmt.Errorf("%w: ErrCommandFailedinvalid index %q: %b", ErrCommandFailed, fields[1], err)
+		return Marker{}, fmt.Errorf("invalid index %q: %s", fields[1], err.Error())
 	}
 
 	freq, err := strconv.ParseUint(fields[2], 10, 64)
 	if err != nil {
-		return Marker{}, fmt.Errorf("%w: invalid frequency %q: %b", ErrCommandFailed, fields[2], err)
+		return Marker{}, fmt.Errorf("invalid frequency %q: %s", fields[2], err.Error())
 	}
 
 	val, err := strconv.ParseFloat(fields[3], 64)
 	if err != nil {
-		return Marker{}, fmt.Errorf("%w: invalid value %q: %v", ErrCommandFailed, fields[3], err)
+		return Marker{}, fmt.Errorf("invalid value %q: %s", fields[3], err.Error())
 	}
 
 	return Marker{
@@ -70,22 +70,22 @@ func parseMarkerResponseLine(line string) (Marker, error) {
 func parseSweepResponse(response string) (Sweep, error) {
 	parts := strings.Split(response, " ")
 	if len(parts) != 3 {
-		return Sweep{}, fmt.Errorf("%w: expected 3 fields, got %d", ErrCommandFailed, len(parts))
+		return Sweep{}, fmt.Errorf("expected 3 fields, got %d", len(parts))
 	}
 
 	sweepStart, err := strconv.ParseInt(parts[0], 10, 64)
 	if err != nil {
-		return Sweep{}, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
+		return Sweep{}, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
 
 	sweepStop, err := strconv.ParseInt(parts[1], 10, 64)
 	if err != nil {
-		return Sweep{}, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
+		return Sweep{}, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
 
 	sweepPoints, err := strconv.ParseInt(parts[2], 10, 64)
 	if err != nil {
-		return Sweep{}, fmt.Errorf("%w: integer conversion failed: %v", ErrCommandFailed, err)
+		return Sweep{}, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
 
 	return Sweep{
@@ -101,22 +101,22 @@ func parseSweepResponse(response string) (Sweep, error) {
 func parseTraceValueResponseLine(line string) (TraceValue, error) {
 	fields := strings.Fields(line)
 	if len(fields) != 5 {
-		return TraceValue{}, fmt.Errorf("%w: expected 5 fields, got %d", ErrCommandFailed, len(fields))
+		return TraceValue{}, fmt.Errorf("expected 5 fields, got %d", len(fields))
 	}
 
 	trace, err := strconv.ParseUint(fields[1], 10, 32)
 	if err != nil {
-		return TraceValue{}, fmt.Errorf("%w: invalid trace: %v", ErrCommandFailed, err)
+		return TraceValue{}, fmt.Errorf("invalid trace: %s", err.Error())
 	}
 
 	point, err := strconv.ParseUint(fields[3], 10, 32)
 	if err != nil {
-		return TraceValue{}, fmt.Errorf("%w: invalid point: %v", ErrCommandFailed, err)
+		return TraceValue{}, fmt.Errorf("invalid point: %s", err.Error())
 	}
 
 	value, err := strconv.ParseFloat(fields[4], 64)
 	if err != nil {
-		return TraceValue{}, fmt.Errorf("%w: invalid value: %v", ErrCommandFailed, err)
+		return TraceValue{}, fmt.Errorf("invalid value: %s", err.Error())
 	}
 
 	return TraceValue{
@@ -132,27 +132,27 @@ func parseTraceValueResponseLine(line string) (TraceValue, error) {
 func parseTraceResponseLine(line string) (Trace, error) {
 	fields := strings.Fields(line)
 	if len(fields) != 4 {
-		return Trace{}, fmt.Errorf("%w: expected 4 fields, got %d", ErrCommandFailed, len(fields))
+		return Trace{}, fmt.Errorf("expected 4 fields, got %d", len(fields))
 	}
 
 	trace, err := strconv.Atoi(strings.TrimSuffix(fields[0], ":"))
 	if err != nil {
-		return Trace{}, fmt.Errorf("%w: failed to parse trace id: %v", ErrCommandFailed, err)
+		return Trace{}, fmt.Errorf("failed to parse trace id: %s", err.Error())
 	}
 
 	unit, ok := TraceUnitFromString(fields[1])
 	if !ok {
-		return Trace{}, fmt.Errorf("%w: failed to parse unit: %v", ErrCommandFailed, fields[1])
+		return Trace{}, fmt.Errorf("failed to parse unit: %s", fields[1])
 	}
 
 	refPos, err := strconv.ParseFloat(fields[2], 64)
 	if err != nil {
-		return Trace{}, fmt.Errorf("%w: failed to parse ref position: %v", ErrCommandFailed, err)
+		return Trace{}, fmt.Errorf("failed to parse ref position: %s", err.Error())
 	}
 
 	scale, err := strconv.ParseFloat(fields[3], 64)
 	if err != nil {
-		return Trace{}, fmt.Errorf("%w: failed to parse ref scale: %v", ErrCommandFailed, err)
+		return Trace{}, fmt.Errorf("failed to parse ref scale: %s", err.Error())
 	}
 
 	return Trace{

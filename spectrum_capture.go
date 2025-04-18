@@ -19,7 +19,7 @@ func (d *Device) Capture() (image.Image, error) {
 	img, err := convertBinCaptureToImage(imgRaw, d.width, d.height)
 	if err != nil {
 		d.logger.Error("failed to convert binary image", "err", err)
-		return nil, fmt.Errorf("%w: failed to convert binary image: %v", ErrCommandFailed, err)
+		return nil, fmt.Errorf("failed to convert binary image: %s", err.Error())
 	}
 
 	return img, nil

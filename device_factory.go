@@ -26,13 +26,13 @@ func NewDevice(portName string, opts ...DeviceOption) (*Device, error) {
 	port, err := serial.Open(portName, mode)
 	if err != nil {
 		logger.Error("failed to open port", "err", err)
-		return nil, fmt.Errorf("%w: failed to open port %s: %v", ErrConnectionFailed, portName, err)
+		return nil, fmt.Errorf("failed to open port %s: %s", portName, err.Error())
 	}
 
 	// set read timeout
 	if err = port.SetReadTimeout(options.readTimeout); err != nil {
 		logger.Error("failed to set read timeout", "err", err)
-		return nil, fmt.Errorf("%w: failed to set read timeout: %v", ErrConnectionFailed, err)
+		return nil, fmt.Errorf("failed to set read timeout: %s", err.Error())
 	}
 
 	// probe device
@@ -40,7 +40,7 @@ func NewDevice(portName string, opts ...DeviceOption) (*Device, error) {
 	pr, err := probeDevice(logger, port, options.responseTimeout)
 	if err != nil {
 		logger.Error("failed to probe device", "err", err)
-		return nil, fmt.Errorf("%w: failed to probe device: %v", ErrConnectionFailed, err)
+		return nil, fmt.Errorf("failed to probe device: %s", err.Error())
 	}
 
 	return createDeviceFromProbe(logger, port, pr, options)
@@ -65,7 +65,7 @@ func FindDevice(opts ...DeviceOption) (*Device, error) {
 	ports, err := serial.GetPortsList()
 	if err != nil {
 		logger.Error("failed to list serial ports", "err", err)
-		return nil, fmt.Errorf("%w: failed to list serial ports: %v", ErrConnectionFailed, err)
+		return nil, fmt.Errorf("failed to list serial ports: %s", err.Error())
 	}
 	logger.Debug("list serial ports", "ports", ports)
 
@@ -80,5 +80,5 @@ func FindDevice(opts ...DeviceOption) (*Device, error) {
 		return device, nil
 	}
 
-	return nil, fmt.Errorf("%w: no device found", ErrConnectionFailed)
+	return nil, fmt.Errorf("no device found")
 }

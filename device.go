@@ -1,7 +1,6 @@
 package tinysa
 
 import (
-	"fmt"
 	"go.bug.st/serial"
 	"log/slog"
 	"sync"
@@ -66,7 +65,7 @@ func (d *Device) sendCommand(cmd string) (string, error) {
 
 	res, err := sendCommand(d.logger, d.port, cmd, d.responseTimeout)
 	if err != nil {
-		return "", fmt.Errorf("%w: %v", ErrCommandFailed, err)
+		return "", err
 	}
 
 	return res, nil
@@ -79,7 +78,7 @@ func (d *Device) sendCommandBinary(cmd string) ([]byte, error) {
 
 	res, err := sendCommandBinary(d.logger, d.port, cmd, d.responseTimeout)
 	if err != nil {
-		return []byte{}, fmt.Errorf("%w: %v", ErrCommandFailed, err)
+		return []byte{}, err
 	}
 
 	return res, nil

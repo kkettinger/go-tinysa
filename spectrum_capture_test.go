@@ -32,7 +32,7 @@ func TestConvertBinToRGBA(t *testing.T) {
 
 	img, err := convertBinCaptureToImage(data, width, height)
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		t.Fatalf("unexpected error: %s", err.Error())
 	}
 
 	for y := 0; y < height; y++ {

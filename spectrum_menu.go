@@ -13,7 +13,7 @@ func (d *Device) TriggerMenu(menuIds []uint) error {
 	strs := make([]string, len(menuIds))
 	for i, v := range menuIds {
 		if v <= 0 {
-			return fmt.Errorf("%w: invalid menu id: %d", ErrCommandFailed, v)
+			return fmt.Errorf("invalid menu id: %d", v)
 		}
 		strs[i] = strconv.Itoa(int(v))
 	}
