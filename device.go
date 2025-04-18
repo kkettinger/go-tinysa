@@ -73,7 +73,7 @@ func (d *Device) sendCommand(cmd string) (string, error) {
 	return res, nil
 }
 
-// sendCommand is the internal method for requesting commands and returning a binary response.
+// sendCommandBinary is the internal method for requesting commands and returning a binary response.
 func (d *Device) sendCommandBinary(cmd string) ([]byte, error) {
 	d.mutex.Lock()
 	defer d.mutex.Unlock()
