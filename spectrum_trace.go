@@ -101,7 +101,7 @@ const (
 	traceCalcAver4  string = "aver4"
 	traceCalcAver16 string = "aver16"
 	traceCalcQuasi  string = "quasi"
-	//traceCalcLog    string = "log"
+	// traceCalcLog    string = "log"
 	// traceCalcLin    string = "lin"
 )
 
@@ -112,7 +112,7 @@ var (
 	TraceCalcAver4  = TraceCalc{traceCalcAver4}
 	TraceCalcAver16 = TraceCalc{traceCalcAver16}
 	TraceCalcQuasi  = TraceCalc{traceCalcQuasi}
-	//TraceCalcLog    = TraceCalc{traceCalcLog} // TODO: Currently not supported (needs extra argument)
+	// TraceCalcLog    = TraceCalc{traceCalcLog} // TODO: Currently not supported (needs extra argument)
 	// TraceCalcLin    = TraceCalc{traceCalcLin} // TODO: Currently not supported (needs extra argument)
 )
 
@@ -134,8 +134,8 @@ var traceCalcOptions = []string{
 	traceCalcAver4,
 	traceCalcAver16,
 	traceCalcQuasi,
-	//traceCalcLog,
-	//traceCalcLin,
+	// traceCalcLog,
+	// traceCalcLin,
 }
 
 func TraceCalcOptions() []string {

@@ -20,7 +20,7 @@ func (d *Device) Reset(dfu bool) error {
 		if d.model != ModelBasic {
 			return fmt.Errorf("option `dfu` not supported by model %s", d.model)
 		}
-		cmd = cmd + " dfu"
+		cmd += " dfu"
 	}
 	_, err := d.sendCommand(cmd)
 	return err
