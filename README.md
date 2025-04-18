@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/kkettinger/go-tinysa)](https://goreportcard.com/report/github.com/kkettinger/go-tinysa)
 
 # go-tinysa
-`go-tinysa` is a sdk for controlling and interacting with the [tinySA](https://www.tinysa.org/) spectrum analyzer via its USB serial interface. It contains methods that allows you to:
+`go-tinysa` is an SDK for controlling and interacting with the [tinySA](https://www.tinysa.org/) spectrum analyzer via its USB serial interface. It contains methods that allows you to:
 
 - Configure sweep parameters (frequency range, center, span, ...)
 - Configure markers and traces
@@ -18,7 +18,7 @@
 - And more, check out the [go reference](https://pkg.go.dev/github.com/kkettinger/go-tinysa)
 
 _Note:_ The SDK was developed by using a tinySA Ultra with firmware version `v1.4-197`.
-If you encounter issues with the basic model or a different firmware version, please report them on GitHub.
+If you encounter issues with the basic model or a different firmware version, please report them.
 
 
 ## Installation
@@ -90,7 +90,7 @@ for _, d := range data {
 If a method for a specific command is missing, you can always send raw commands:
 
 ```go
-result, _ := dev.SendCommand("version")
+result, _ := dev.SendCommand("sd_list")
 fmt.Println("Result:", result)
 ```
 
@@ -113,7 +113,7 @@ The probe result can then be access with `Model()`, `Version()` and `HardwareVer
 The `ScreenResolution()` method will return the width and height of the screen based on the model.
 
 The model is used for methods and options that are only valid for specific tinySA models.
-For example, the `dfu` argument in `Reset(dfu bool)` is only valid for the basic model, and will return a `ErrOptionNotSupportedByModel` error when the method is called by an ultra device.
+For example, the `dfu` argument in `Reset(dfu bool)` is only valid for the basic model, and will return an `ErrOptionNotSupportedByModel` error when the method is called by an ultra device.
 
 
 ## License
