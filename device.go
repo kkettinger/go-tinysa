@@ -1,3 +1,4 @@
+//revive:disable:package-comments
 package tinysa
 
 import (
@@ -7,17 +8,18 @@ import (
 	"time"
 )
 
+// Device represents a connected device instance with associated configuration and state.
 type Device struct {
-	port            serial.Port
-	mutex           sync.Mutex
-	model           Model
-	version         string
-	hwVersion       string
-	width           int
-	height          int
-	logger          *slog.Logger
-	readTimeout     time.Duration
-	responseTimeout time.Duration
+	port            serial.Port   // Serial port used for communication
+	mutex           sync.Mutex    // Mutex to ensure thread-safe access to the device
+	model           Model         // Device model (basic or ultra)
+	version         string        // Firmware version of the device
+	hwVersion       string        // Hardware version of the device
+	width           int           // Screen width in pixels
+	height          int           // Screen height in pixels
+	logger          *slog.Logger  // Optional logger for debugging and tracing
+	readTimeout     time.Duration // Timeout for reading from the device
+	responseTimeout time.Duration // Timeout for waiting for a response from the device
 }
 
 // Close closes the open device.

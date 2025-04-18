@@ -11,6 +11,7 @@ linters:
     - gocritic
     - gosec
     - intrange
+    - revive
   exclusions:
     rules:
       - linters: [ "errcheck" ]

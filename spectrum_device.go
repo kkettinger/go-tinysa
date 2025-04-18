@@ -26,8 +26,8 @@ func (d *Device) Reset(dfu bool) error {
 	return err
 }
 
-// GetDeviceId returns the device id.
-func (d *Device) GetDeviceId() (uint, error) {
+// GetDeviceID returns the device id.
+func (d *Device) GetDeviceID() (uint, error) {
 	d.logger.Info("requesting device id")
 	res, err := d.sendCommand("deviceid")
 	if err != nil {
@@ -45,8 +45,8 @@ func (d *Device) GetDeviceId() (uint, error) {
 	return uint(id), nil
 }
 
-// SetDeviceId sets the device id.
-func (d *Device) SetDeviceId(id uint) error {
+// SetDeviceID sets the device id.
+func (d *Device) SetDeviceID(id uint) error {
 	d.logger.Info("setting device id", "id", id)
 	_, err := d.sendCommand(fmt.Sprintf("deviceid %d", id))
 	return err

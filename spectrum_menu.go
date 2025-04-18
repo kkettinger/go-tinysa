@@ -8,10 +8,10 @@ import (
 
 // TriggerMenu virtually clicks on the menu items on the device. First element starts with 1.
 // Example: [6, 4, 2] enables the waterfall display.
-func (d *Device) TriggerMenu(menuIds []uint) error {
-	d.logger.Info("triggering menu", "menu_ids", menuIds)
-	strs := make([]string, len(menuIds))
-	for i, v := range menuIds {
+func (d *Device) TriggerMenu(menuIDs []uint) error {
+	d.logger.Info("triggering menu", "menu_ids", menuIDs)
+	strs := make([]string, len(menuIDs))
+	for i, v := range menuIDs {
 		if v <= 0 || v > 255 {
 			return fmt.Errorf("invalid menu id: %d", v)
 		}

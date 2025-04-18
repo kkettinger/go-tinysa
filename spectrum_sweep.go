@@ -4,12 +4,14 @@ import (
 	"fmt"
 )
 
+// Sweep defines a frequency sweep with start/stop frequencies and number of points.
 type Sweep struct {
-	Start  uint64
-	Stop   uint64
-	Points uint
+	Start  uint64 // Start frequency in Hz
+	Stop   uint64 // Stop frequency in Hz
+	Points uint   // Number of sweep points
 }
 
+// SweepMode represents a sweep accuracy mode.
 type SweepMode struct {
 	value string
 }
@@ -22,12 +24,20 @@ const (
 )
 
 var (
-	SweepModeNormal  = SweepMode{sweepModeNormal}
+	// SweepModeNormal is the default mode with standard timing and resolution.
+	SweepModeNormal = SweepMode{sweepModeNormal}
+
+	// SweepModePrecise doubles points and delays for higher accuracy, slower sweep.
 	SweepModePrecise = SweepMode{sweepModePrecise}
-	SweepModeFast    = SweepMode{sweepModeFast}
-	SweepModeNoise   = SweepMode{sweepModeNoise}
+
+	// SweepModeFast reduces wait time for faster sweeps, with ~10dB more noise.
+	SweepModeFast = SweepMode{sweepModeFast}
+
+	// SweepModeNoise is optimized for noise sources, allowing gaps in data.
+	SweepModeNoise = SweepMode{sweepModeNoise}
 )
 
+// sweepModeMap maps string values to SweepMode types.
 var sweepModeMap = map[string]SweepMode{
 	sweepModeNormal:  SweepModeNormal,
 	sweepModePrecise: SweepModePrecise,
@@ -35,6 +45,7 @@ var sweepModeMap = map[string]SweepMode{
 	sweepModeNoise:   SweepModeNoise,
 }
 
+// sweepModeOptions lists supported sweep mode strings.
 var sweepModeOptions = []string{
 	sweepModeNormal,
 	sweepModePrecise,
@@ -42,23 +53,32 @@ var sweepModeOptions = []string{
 	sweepModeNoise,
 }
 
+// SweepModeOptions returns a list of all supported sweep mode options.
 func SweepModeOptions() []string {
 	return sweepModeOptions
 }
 
+// String returns the string representation of the SweepMode.
 func (m SweepMode) String() string {
 	return m.value
 }
 
+// IsValid reports whether the SweepMode contains a valid mode.
 func (m SweepMode) IsValid() bool {
 	return m.value != ""
 }
 
+// SweepStatus represents the current status of a sweep operation.
 type SweepStatus string
 
 const (
-	SweepStatusPaused  SweepStatus = "paused"
+	// SweepStatusPaused indicates that the sweep is currently paused.
+	SweepStatusPaused SweepStatus = "paused"
+
+	// SweepStatusResumed indicates that the sweep has been resumed.
 	SweepStatusResumed SweepStatus = "resumed"
+
+	// SweepStatusUnknown indicates that the sweep status is not known.
 	SweepStatusUnknown SweepStatus = "unknown"
 )
 

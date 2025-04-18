@@ -6,14 +6,17 @@ import (
 	"strings"
 )
 
+// TraceUnit represents the unit of measurement for a trace value.
 type TraceUnit struct {
 	value string
 }
 
+// String returns the string representation of the TraceUnit.
 func (u TraceUnit) String() string {
 	return u.value
 }
 
+// IsValid reports whether the TraceUnit contains a valid unit.
 func (u TraceUnit) IsValid() bool {
 	return u.value != ""
 }
@@ -29,13 +32,26 @@ const (
 )
 
 var (
-	TraceUnitRaw  = TraceUnit{traceUnitRAW}
-	TraceUnitDBm  = TraceUnit{traceUnitDBm}
+	// TraceUnitRaw represents raw, unprocessed trace values.
+	TraceUnitRaw = TraceUnit{traceUnitRAW}
+
+	// TraceUnitDBm represents values in decibels relative to 1 milliwatt (dBm).
+	TraceUnitDBm = TraceUnit{traceUnitDBm}
+
+	// TraceUnitDBmV represents values in decibels relative to 1 millivolt (dBmV).
 	TraceUnitDBmV = TraceUnit{traceUnitDBmV}
+
+	// TraceUnitDBuV represents values in decibels relative to 1 microvolt (dBuV).
 	TraceUnitDBuV = TraceUnit{traceUnitDBuV}
-	TraceUnitV    = TraceUnit{traceUnitV}
-	TraceUnitVpp  = TraceUnit{traceUnitVpp}
-	TraceUnitW    = TraceUnit{traceUnitW}
+
+	// TraceUnitV represents values in volts (V).
+	TraceUnitV = TraceUnit{traceUnitV}
+
+	// TraceUnitVpp represents values in volts peak-to-peak (Vpp).
+	TraceUnitVpp = TraceUnit{traceUnitVpp}
+
+	// TraceUnitW represents values in watts (W).
+	TraceUnitW = TraceUnit{traceUnitW}
 )
 
 var traceUnitMap = map[string]TraceUnit{
@@ -58,10 +74,12 @@ var traceUnitOptions = []string{
 	traceUnitW,
 }
 
+// TraceUnitOptions returns a list of possible trace units like "dBm" or "Vpp".
 func TraceUnitOptions() []string {
 	return traceUnitOptions
 }
 
+// Trace represents a single trace status containing the trace id, trace unit, reference position and scale value.
 type Trace struct {
 	Trace  uint
 	Unit   TraceUnit
@@ -69,12 +87,15 @@ type Trace struct {
 	Scale  float64
 }
 
+// TraceValue represents a single trace data point containing the trace id, index point and signal value in dBm.
 type TraceValue struct {
 	Trace uint
 	Point uint
 	Value float64
 }
 
+// TraceData represents a single trace data point containing the trace id, index point, frequency value in Hz, and
+// signal value in dBm.
 type TraceData struct {
 	Trace     uint
 	Point     uint
@@ -82,6 +103,7 @@ type TraceData struct {
 	Value     float64
 }
 
+// TraceCalc contains the string for the trace calculation option like "maxh" (see traceCalc*).
 type TraceCalc struct {
 	value string
 }
@@ -90,6 +112,7 @@ func (c TraceCalc) String() string {
 	return c.value
 }
 
+// IsValid returns true if a valid TraceCalc option is set.
 func (c TraceCalc) IsValid() bool {
 	return c.value != ""
 }
@@ -106,14 +129,27 @@ const (
 )
 
 var (
-	TraceCalcMinH   = TraceCalc{traceCalcMinH}
-	TraceCalcMaxH   = TraceCalc{traceCalcMaxH}
-	TraceCalcMaxD   = TraceCalc{traceCalcMaxD}
-	TraceCalcAver4  = TraceCalc{traceCalcAver4}
+	// TraceCalcMinH sets the trace to hold the minimum value measured.
+	TraceCalcMinH = TraceCalc{traceCalcMinH}
+
+	// TraceCalcMaxH sets the trace to hold the maximum value measured.
+	TraceCalcMaxH = TraceCalc{traceCalcMaxH}
+
+	// TraceCalcMaxD holds the maximum value for a limited number of scans.
+	TraceCalcMaxD = TraceCalc{traceCalcMaxD}
+
+	// TraceCalcAver4 enables running average over 4 samples.
+	TraceCalcAver4 = TraceCalc{traceCalcAver4}
+
+	// TraceCalcAver16 enables running average over 16 samples.
 	TraceCalcAver16 = TraceCalc{traceCalcAver16}
-	TraceCalcQuasi  = TraceCalc{traceCalcQuasi}
-	// TraceCalcLog    = TraceCalc{traceCalcLog} // TODO: Currently not supported (needs extra argument)
-	// TraceCalcLin    = TraceCalc{traceCalcLin} // TODO: Currently not supported (needs extra argument)
+
+	// TraceCalcQuasi sets quasi-peak hold mode.
+	TraceCalcQuasi = TraceCalc{traceCalcQuasi}
+
+	// TODO: TraceCalcLog and TraceCalcLin are not currently supported (require extra arguments).
+	// TraceCalcLog    = TraceCalc{traceCalcLog}
+	// TraceCalcLin    = TraceCalc{traceCalcLin}
 )
 
 var traceCalcMap = map[string]TraceCalc{
@@ -138,22 +174,23 @@ var traceCalcOptions = []string{
 	// traceCalcLin,
 }
 
+// TraceCalcOptions returns a list of possible trace calculations options like "minh" or "quasi".
 func TraceCalcOptions() []string {
 	return traceCalcOptions
 }
 
 // GetTrace returns trace information for the specified trace id as Trace struct.
-func (d *Device) GetTrace(traceId uint) (Trace, error) {
-	d.logger.Info("requesting trace information", "trace_id", traceId)
+func (d *Device) GetTrace(traceID uint) (Trace, error) {
+	d.logger.Info("requesting trace information", "trace_id", traceID)
 
-	line, err := d.sendCommand(fmt.Sprintf("trace %d", traceId))
+	line, err := d.sendCommand(fmt.Sprintf("trace %d", traceID))
 	if err != nil {
 		return Trace{}, err
 	}
 
 	result, err := parseTraceResponseLine(line)
 	if err != nil {
-		d.logger.Error("failed to parse trace result", "trace_id", traceId, "line", line, "err", err)
+		d.logger.Error("failed to parse trace result", "trace_id", traceID, "line", line, "err", err)
 		return Trace{}, fmt.Errorf("failed to parse trace result: %s", err.Error())
 	}
 
@@ -209,10 +246,10 @@ func (d *Device) GetTraceFrequencies() ([]uint64, error) {
 }
 
 // GetTraceValues returns the list of the trace values as a TraceValue slice.
-func (d *Device) GetTraceValues(traceId uint) ([]TraceValue, error) {
-	d.logger.Info("getting trace values", "trace_id", traceId)
+func (d *Device) GetTraceValues(traceID uint) ([]TraceValue, error) {
+	d.logger.Info("getting trace values", "trace_id", traceID)
 
-	dataStr, err := d.sendCommand(fmt.Sprintf("trace %d value", traceId))
+	dataStr, err := d.sendCommand(fmt.Sprintf("trace %d value", traceID))
 	if err != nil {
 		return nil, err
 	}
@@ -222,7 +259,7 @@ func (d *Device) GetTraceValues(traceId uint) ([]TraceValue, error) {
 	for i, line := range dataList {
 		data[i], err = parseTraceValueResponseLine(line)
 		if err != nil {
-			d.logger.Error("failed to parse trace value", "trace_id", traceId, "line", line)
+			d.logger.Error("failed to parse trace value", "trace_id", traceID, "line", line)
 			return nil, fmt.Errorf("failed to parse trace result: %s", err.Error())
 		}
 	}
@@ -231,10 +268,10 @@ func (d *Device) GetTraceValues(traceId uint) ([]TraceValue, error) {
 }
 
 // GetTraceData returns a combined list of frequencies and values as a TraceData slice.
-func (d *Device) GetTraceData(traceId uint) ([]TraceData, error) {
-	d.logger.Info("getting trace data", "trace_id", traceId)
+func (d *Device) GetTraceData(traceID uint) ([]TraceData, error) {
+	d.logger.Info("getting trace data", "trace_id", traceID)
 
-	values, err := d.GetTraceValues(traceId)
+	values, err := d.GetTraceValues(traceID)
 	if err != nil {
 		return nil, err
 	}
@@ -247,7 +284,7 @@ func (d *Device) GetTraceData(traceId uint) ([]TraceData, error) {
 	lenValues := len(values)
 	lenFreq := len(frequencies)
 	if lenValues != lenFreq {
-		d.logger.Error("value and frequency values lengths do not match", "trace_id", traceId, "values", values, "frequencies", frequencies)
+		d.logger.Error("value and frequency values lengths do not match", "trace_id", traceID, "values", values, "frequencies", frequencies)
 		return nil, fmt.Errorf("value and frequency values lengths do not match, %d != %d", lenValues, lenFreq)
 	}
 
@@ -265,21 +302,21 @@ func (d *Device) GetTraceData(traceId uint) ([]TraceData, error) {
 }
 
 // EnableTrace enables the display of the specified trace.
-func (d *Device) EnableTrace(traceId uint) error {
-	d.logger.Info("enabling trace", "trace_id", traceId)
-	_, err := d.sendCommand(fmt.Sprintf("trace %d view on", traceId))
+func (d *Device) EnableTrace(traceID uint) error {
+	d.logger.Info("enabling trace", "trace_id", traceID)
+	_, err := d.sendCommand(fmt.Sprintf("trace %d view on", traceID))
 	return err
 }
 
 // DisableTrace disables the display of the specified trace.
-func (d *Device) DisableTrace(traceId uint) error {
-	_, err := d.sendCommand(fmt.Sprintf("trace %d view off", traceId))
+func (d *Device) DisableTrace(traceID uint) error {
+	_, err := d.sendCommand(fmt.Sprintf("trace %d view off", traceID))
 	return err
 }
 
 // EnableTraceCalc enables trace calculations like TraceCalcMaxH or TraceCalcQuasi for the specified trace.
-func (d *Device) EnableTraceCalc(traceId uint, calc TraceCalc) error {
-	d.logger.Info("enabling trace calculations", "trace_id", traceId, "calc", calc)
+func (d *Device) EnableTraceCalc(traceID uint, calc TraceCalc) error {
+	d.logger.Info("enabling trace calculations", "trace_id", traceID, "calc", calc)
 
 	// calc log and lin is only supported on ultra
 	/*if d.model != ModelUltra {
@@ -287,14 +324,14 @@ func (d *Device) EnableTraceCalc(traceId uint, calc TraceCalc) error {
 			return ErrOptionNotSupportedByModel
 		}
 	}*/
-	_, err := d.sendCommand(fmt.Sprintf("calc %d %s", traceId, calc.String()))
+	_, err := d.sendCommand(fmt.Sprintf("calc %d %s", traceID, calc.String()))
 	return err
 }
 
 // DisableTraceCalc disables calculation for the specified trace.
-func (d *Device) DisableTraceCalc(traceId uint) error {
-	d.logger.Info("disabling trace calculations", "trace_id", traceId)
-	_, err := d.sendCommand(fmt.Sprintf("calc %d off", traceId))
+func (d *Device) DisableTraceCalc(traceID uint) error {
+	d.logger.Info("disabling trace calculations", "trace_id", traceID)
+	_, err := d.sendCommand(fmt.Sprintf("calc %d off", traceID))
 	return err
 }
 

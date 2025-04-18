@@ -18,6 +18,7 @@ type deviceOptions struct {
 	responseTimeout time.Duration
 }
 
+// defaultDeviceOptions returns a deviceOptions struct initialized with default values.
 func defaultDeviceOptions() deviceOptions {
 	return deviceOptions{
 		logger:          nil,
@@ -27,26 +28,31 @@ func defaultDeviceOptions() deviceOptions {
 	}
 }
 
+// DeviceOption defines a function type that modifies deviceOptions.
 type DeviceOption func(*deviceOptions)
 
+// WithBaudRate sets a custom baud rate for the device communication.
 func WithBaudRate(baudRate int) DeviceOption {
 	return func(opts *deviceOptions) {
 		opts.baudrate = baudRate
 	}
 }
 
+// WithLogger sets a custom slog.Logger for logging device interactions.
 func WithLogger(logger *slog.Logger) DeviceOption {
 	return func(opts *deviceOptions) {
 		opts.logger = logger
 	}
 }
 
+// WithReadTimeout sets the timeout duration for reading from the device.
 func WithReadTimeout(timeout time.Duration) DeviceOption {
 	return func(opts *deviceOptions) {
 		opts.readTimeout = timeout
 	}
 }
 
+// WithResponseTimeout sets the timeout duration for waiting for a device response.
 func WithResponseTimeout(timeout time.Duration) DeviceOption {
 	return func(opts *deviceOptions) {
 		opts.responseTimeout = timeout

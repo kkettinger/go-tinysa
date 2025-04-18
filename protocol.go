@@ -42,17 +42,17 @@ func sendCommandBinary(logger *slog.Logger, port serial.Port, cmd string, respon
 	var response bytes.Buffer
 	tries := 0
 	for {
-		if r, err := sendCommandBinaryInner(logger, port, fullCmd, responseTimeout); err != nil {
+		r, err := sendCommandBinaryInner(logger, port, fullCmd, responseTimeout)
+		if err != nil {
 			if errors.Is(err, ErrCommandResponseTimeout) && tries < responseTimeoutTries {
 				logger.Debug("response timeout detected, re-trying", "tries", tries)
 				tries++
 				continue
 			}
 			return nil, err
-		} else {
-			response = r
-			break
 		}
+		response = r
+		break
 	}
 
 	var responseBytes = response.Bytes()
