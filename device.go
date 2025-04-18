@@ -49,9 +49,14 @@ func (d *Device) ScreenResolution() (width, height int) {
 	return d.width, d.height
 }
 
-// SendCommand sends a command to the device and returns the parsed response.
+// SendCommand sends a command to the device and returns the parsed response as string.
 func (d *Device) SendCommand(cmd string) (string, error) {
 	return d.sendCommand(cmd)
+}
+
+// SendCommandBinary sends a command to the device and returns the parsed response as []byte.
+func (d *Device) SendCommandBinary(cmd string) ([]byte, error) {
+	return d.sendCommandBinary(cmd)
 }
 
 // sendCommand is the internal method for requesting commands and returning a string response.
