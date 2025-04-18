@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"go.bug.st/serial"
 	"io"
 	"log/slog"
-	"strings"
 	"time"
+
+	"go.bug.st/serial"
 )
 
 const (
@@ -119,11 +119,11 @@ func sendCommandBinaryInner(logger *slog.Logger, port serial.Port, fullCmd strin
 			return bytes.Buffer{}, fmt.Errorf("failed to read response: %v", err)
 		}
 
-		logger.Debug("read bytes", "len", n)
 		response.Write(buffer[:n])
+		logger.Debug("read bytes", "n", n, "len", response.Len())
 
-		// Check if we received the response prompt
-		if strings.Contains(string(buffer[:n]), responsePrompt) {
+		// Check if we received the response prompt.
+		if bytes.HasSuffix(response.Bytes(), []byte(responsePrompt)) {
 			logger.Debug("response prompt detected, reading complete", "buffer", string(buffer[:n]))
 			break
 		}
