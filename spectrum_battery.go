@@ -32,7 +32,7 @@ func (d *Device) GetBatteryOffsetVoltage() (uint, error) {
 		return 0, err
 	}
 
-	vbatOffset, err := strconv.ParseInt(res, 10, 16)
+	vbatOffset, err := strconv.ParseUint(res, 10, 0)
 	if err != nil {
 		return 0, fmt.Errorf("failed to parse battery offset voltage: %s", err.Error())
 	}

@@ -53,9 +53,9 @@ func convertRGB565PixelToRGBA(pixel uint16) color.RGBA {
 
 	// Convert to 8-bit per channel with proper rounding
 	return color.RGBA{
-		R: uint8((r*255 + 15) / 31),
-		G: uint8((g*255 + 31) / 63),
-		B: uint8((b*255 + 15) / 31),
+		R: uint8((r*255 + 15) / 31), // #nosec G115
+		G: uint8((g*255 + 31) / 63), // #nosec G115
+		B: uint8((b*255 + 15) / 31), // #nosec G115
 		A: 255,
 	}
 }

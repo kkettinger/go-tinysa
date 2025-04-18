@@ -63,7 +63,7 @@ func TraceUnitOptions() []string {
 }
 
 type Trace struct {
-	Trace  int // TODO: uint
+	Trace  uint
 	Unit   TraceUnit
 	RefPos float64
 	Scale  float64

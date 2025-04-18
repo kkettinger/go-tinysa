@@ -8,6 +8,7 @@ linters:
     - staticcheck
     - unused
     - errorlint
+    - gosec
   exclusions:
     rules:
       - linters: [ "errcheck" ]

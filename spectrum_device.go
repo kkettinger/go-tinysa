@@ -38,7 +38,7 @@ func (d *Device) GetDeviceId() (uint, error) {
 	if len(parts) != 2 && parts[0] != "deviceid" {
 		return 0, fmt.Errorf("unexpected response for deviceid: %s", res)
 	}
-	id, err := strconv.Atoi(parts[1])
+	id, err := strconv.ParseUint(parts[1], 10, 0)
 	if err != nil {
 		return 0, fmt.Errorf("failed to parse device id: %s", err.Error())
 	}

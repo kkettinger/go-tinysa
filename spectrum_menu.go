@@ -12,7 +12,7 @@ func (d *Device) TriggerMenu(menuIds []uint) error {
 	d.logger.Info("triggering menu", "menu_ids", menuIds)
 	strs := make([]string, len(menuIds))
 	for i, v := range menuIds {
-		if v <= 0 {
+		if v <= 0 || v > 255 {
 			return fmt.Errorf("invalid menu id: %d", v)
 		}
 		strs[i] = strconv.Itoa(int(v))

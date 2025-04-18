@@ -15,7 +15,7 @@ func parseBatteryResponse(response string) (uint, error) {
 		return 0, fmt.Errorf("expected 2 fields, got %d", len(parts))
 	}
 
-	vbat, err := strconv.ParseInt(parts[0], 10, 16)
+	vbat, err := strconv.ParseInt(parts[0], 10, 0)
 	if err != nil {
 		return 0, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
@@ -73,24 +73,24 @@ func parseSweepResponse(response string) (Sweep, error) {
 		return Sweep{}, fmt.Errorf("expected 3 fields, got %d", len(parts))
 	}
 
-	sweepStart, err := strconv.ParseInt(parts[0], 10, 64)
+	sweepStart, err := strconv.ParseUint(parts[0], 10, 64)
 	if err != nil {
 		return Sweep{}, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
 
-	sweepStop, err := strconv.ParseInt(parts[1], 10, 64)
+	sweepStop, err := strconv.ParseUint(parts[1], 10, 64)
 	if err != nil {
 		return Sweep{}, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
 
-	sweepPoints, err := strconv.ParseInt(parts[2], 10, 64)
+	sweepPoints, err := strconv.ParseUint(parts[2], 10, 64)
 	if err != nil {
 		return Sweep{}, fmt.Errorf("integer conversion failed: %s", err.Error())
 	}
 
 	return Sweep{
-		Start:  uint64(sweepStart),
-		Stop:   uint64(sweepStop),
+		Start:  sweepStart,
+		Stop:   sweepStop,
 		Points: uint(sweepPoints),
 	}, nil
 }
@@ -104,12 +104,12 @@ func parseTraceValueResponseLine(line string) (TraceValue, error) {
 		return TraceValue{}, fmt.Errorf("expected 5 fields, got %d", len(fields))
 	}
 
-	trace, err := strconv.ParseUint(fields[1], 10, 32)
+	trace, err := strconv.ParseUint(fields[1], 10, 0)
 	if err != nil {
 		return TraceValue{}, fmt.Errorf("invalid trace: %s", err.Error())
 	}
 
-	point, err := strconv.ParseUint(fields[3], 10, 32)
+	point, err := strconv.ParseUint(fields[3], 10, 0)
 	if err != nil {
 		return TraceValue{}, fmt.Errorf("invalid point: %s", err.Error())
 	}
@@ -135,7 +135,7 @@ func parseTraceResponseLine(line string) (Trace, error) {
 		return Trace{}, fmt.Errorf("expected 4 fields, got %d", len(fields))
 	}
 
-	trace, err := strconv.Atoi(strings.TrimSuffix(fields[0], ":"))
+	trace, err := strconv.ParseUint(strings.TrimSuffix(fields[0], ":"), 10, 0)
 	if err != nil {
 		return Trace{}, fmt.Errorf("failed to parse trace id: %s", err.Error())
 	}
@@ -156,7 +156,7 @@ func parseTraceResponseLine(line string) (Trace, error) {
 	}
 
 	return Trace{
-		Trace:  trace,
+		Trace:  uint(trace),
 		Unit:   unit,
 		RefPos: refPos,
 		Scale:  scale,
