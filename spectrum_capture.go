@@ -33,8 +33,8 @@ func convertBinCaptureToImage(data []byte, width int, height int) (image.Image, 
 	}
 
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
+	for y := range height {
+		for x := range width {
 			i := (y*width + x) * 2
 			pixel := uint16(data[i])<<8 | uint16(data[i+1]) // big-endian
 			img.Set(x, y, convertRGB565PixelToRGBA(pixel))

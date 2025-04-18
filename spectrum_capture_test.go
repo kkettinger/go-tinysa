@@ -35,8 +35,8 @@ func TestConvertBinToRGBA(t *testing.T) {
 		t.Fatalf("unexpected error: %s", err.Error())
 	}
 
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
+	for y := range height {
+		for x := range width {
 			r, g, b, a := img.At(x, y).RGBA()
 			if r>>8 != 255 || g>>8 != 0 || b>>8 != 0 || a>>8 != 255 {
 				t.Errorf("pixel at (%d, %d) unexpected value: R=%d, G=%d, B=%d, A=%d",
@@ -70,8 +70,8 @@ func TestCompareWithGoldenBMP(t *testing.T) {
 	}
 
 	// Pixel-by-pixel comparison
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
+	for y := range height {
+		for x := range width {
 			r1, g1, b1, _ := refImg.At(x, y).RGBA()
 			r2, g2, b2, _ := testImg.At(x, y).RGBA()
 

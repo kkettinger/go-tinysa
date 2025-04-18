@@ -9,6 +9,7 @@ linters:
     - unused
     - errorlint
     - gosec
+    - intrange
   exclusions:
     rules:
       - linters: [ "errcheck" ]
