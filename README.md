@@ -1,7 +1,7 @@
 [![Golang Test](https://github.com/kkettinger/go-tinysa/actions/workflows/go-test.yml/badge.svg)](https://github.com/kkettinger/go-tinysa/actions/workflows/go-test.yml)
 [![Golang CI Lint](https://github.com/kkettinger/go-tinysa/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/kkettinger/go-tinysa/actions/workflows/golangci-lint.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/kkettinger/go-tinysa.svg)](https://pkg.go.dev/github.com/kkettinger/go-tinysa)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](/LICENSE)
+[![License: MIT](https://img.shields.io/github/license/kkettinger/go-tinysa)](/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kkettinger/go-tinysa)](https://goreportcard.com/report/github.com/kkettinger/go-tinysa)
 
 # go-tinysa
