@@ -102,3 +102,17 @@ func (d *Device) DisableMarkerDelta(markerID uint) error {
 	_, err := d.sendCommand(fmt.Sprintf("marker %d delta off", markerID))
 	return err
 }
+
+// EnableMarkerTracking enables tracking of the peak value for the assigned trace of the given marker.
+func (d *Device) EnableMarkerTracking(markerID uint) error {
+	d.logger.Info("enabling marker tracking", "marker_id", markerID)
+	_, err := d.sendCommand(fmt.Sprintf("marker %d tracking on", markerID))
+	return err
+}
+
+// DisableMarkerTracking disables tracking of the peak value for the assigned trace of the given marker.
+func (d *Device) DisableMarkerTracking(markerID uint) error {
+	d.logger.Info("disabling marker tracking", "marker_id", markerID)
+	_, err := d.sendCommand(fmt.Sprintf("marker %d tracking off", markerID))
+	return err
+}
