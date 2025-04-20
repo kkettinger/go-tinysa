@@ -97,6 +97,11 @@ func sendCommandBinaryInner(logger *slog.Logger, port serial.Port, fullCmd strin
 		return bytes.Buffer{}, fmt.Errorf("cmd write failed: %s", err.Error())
 	}
 
+	if err := port.Drain(); err != nil {
+		logger.Debug("failed to drain port", "err", err)
+		return bytes.Buffer{}, fmt.Errorf("drain failed: %s", err.Error())
+	}
+
 	buffer := make([]byte, 512)
 	var response bytes.Buffer
 
