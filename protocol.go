@@ -42,10 +42,10 @@ func sendCommandBinary(logger *slog.Logger, port serial.Port, cmd string, respon
 	var response bytes.Buffer
 	tries := 0
 	for {
-		r, err := sendCommandBinaryInner(logger, port, fullCmd, responseTimeout)
+		r, err := sendCommandAndRead(logger, port, fullCmd, responseTimeout)
 		if err != nil {
 			if errors.Is(err, ErrCommandResponseTimeout) && tries < responseTimeoutTries {
-				logger.Debug("response timeout detected, re-trying", "tries", tries)
+				logger.Warn("response timeout detected, re-trying", "tries", tries)
 				tries++
 				continue
 			}
@@ -55,50 +55,63 @@ func sendCommandBinary(logger *slog.Logger, port serial.Port, cmd string, respon
 		break
 	}
 
-	var responseBytes = response.Bytes()
+	return handleResponse(logger, fullCmd, response.Bytes())
+}
 
-	// Check if we retrieved our echo.
-	if len(responseBytes) < len(fullCmd) {
-		logger.Debug("response is too short, missing echo", "len", len(responseBytes))
+// handleResponse handles both string and binary responses.
+func handleResponse(logger *slog.Logger, fullCmd string, response []byte) ([]byte, error) {
+	// Check if we retrieved (at least) our own command as echo.
+	if len(response) < len(fullCmd) {
+		logger.Error("response is too short, missing echo", "len", len(response), "response", string(response))
 		return nil, fmt.Errorf("response is too short, missing echo")
 	}
 
-	// Remove the echoed command.
-	responseBytes = responseBytes[len(fullCmd):]
+	// Ensure the response starts with the echoed command.
+	if !bytes.HasPrefix(response, []byte(fullCmd)) {
+		logger.Error("response does not start with echoed command", "expected", fullCmd, "got", string(response[:len(fullCmd)]))
+		return nil, fmt.Errorf("response does not start with echoed command")
+	}
 
-	logger.Debug("removed echoed command", "response", string(responseBytes))
+	// Remove the echoed command from response.
+	response = response[len(fullCmd):]
+	logger.Debug("removed echoed command", "response", string(response))
 
-	// If the response is just the response prompt, it was command without any response,
-	// and we are finished here.
-	if len(responseBytes) == len(responsePrompt) && string(responseBytes) == responsePrompt {
-		logger.Debug("found only response prompt, finished")
+	// Check if the response is long enough to contain the response prompt.
+	if len(response) < len(responsePrompt) {
+		logger.Error("response is too short, missing response prompt", "len", len(response), "response", string(response))
+		return nil, fmt.Errorf("response is too short, missing response prompt")
+	}
+
+	// If the response is just the response prompt, it was command without any response, and we are finished here.
+	if bytes.Equal(response, []byte(responsePrompt)) {
+		logger.Debug("only response prompt found, no additional response")
 		return []byte{}, nil
 	}
 
 	// If the last received bytes match commandTerminator + responsePrompt, we received a string as response,
 	// and remove both. Otherwise, it is a binary response (e.g. `capture`), where we only remove the prompt.
-	responseSuffixStr := commandTerminator + responsePrompt
-	if string(responseBytes[len(responseBytes)-len(responseSuffixStr):]) == responseSuffixStr {
-		responseBytes = responseBytes[:len(responseBytes)-len(responseSuffixStr)]
-		logger.Debug("parsed as string response", "response", string(responseBytes))
+	suffix := commandTerminator + responsePrompt
+	if bytes.HasSuffix(response, []byte(suffix)) {
+		response = response[:len(response)-len(suffix)]
+		logger.Debug("parsed as string response", "response", string(response))
 	} else {
-		responseBytes = responseBytes[:len(responseBytes)-len(responsePrompt)]
-		logger.Debug("parsed as binary response", "response", string(responseBytes))
+		response = response[:len(response)-len(responsePrompt)]
+		logger.Debug("parsed as binary response", "response", string(response))
 	}
 
-	return responseBytes, nil
+	return response, nil
 }
 
-// sendCommandBinaryInner sends a request over the serial port and reads the response.
-func sendCommandBinaryInner(logger *slog.Logger, port serial.Port, fullCmd string, responseTimeout time.Duration) (bytes.Buffer, error) {
+// sendCommandAndRead sends a request over the serial port and reads the response.
+func sendCommandAndRead(logger *slog.Logger, port serial.Port, fullCmd string, responseTimeout time.Duration) (bytes.Buffer, error) {
 	logger.Debug("sending full command", "cmd", fullCmd)
 	if _, err := port.Write([]byte(fullCmd)); err != nil {
-		logger.Debug("failed to write command", "cmd", fullCmd, "err", err)
+		logger.Error("failed to write command", "cmd", fullCmd, "err", err)
 		return bytes.Buffer{}, fmt.Errorf("cmd write failed: %s", err.Error())
 	}
 
 	if err := port.Drain(); err != nil {
-		logger.Debug("failed to drain port", "err", err)
+		logger.Error("failed to drain port", "err", err)
 		return bytes.Buffer{}, fmt.Errorf("drain failed: %s", err.Error())
 	}
 
@@ -110,17 +123,17 @@ func sendCommandBinaryInner(logger *slog.Logger, port serial.Port, fullCmd strin
 	logger.Debug("waiting for response")
 	for {
 		if time.Now().After(timeout) {
-			logger.Debug("timeout occurred while reading response", "timeout", timeout.String())
+			logger.Error("timeout occurred while reading response", "timeout", timeout.String())
 			return bytes.Buffer{}, ErrCommandResponseTimeout
 		}
 
 		n, err := port.Read(buffer)
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				logger.Debug("port eof occurred while reading response")
+				logger.Error("port eof occurred while reading response")
 				break
 			}
-			logger.Debug("failed to read response", "err", err)
+			logger.Error("failed to read response", "err", err)
 			return bytes.Buffer{}, fmt.Errorf("failed to read response: %s", err.Error())
 		}
 
