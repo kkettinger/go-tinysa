@@ -357,8 +357,8 @@ func (d *Device) SetTraceRefLevelAuto() error {
 }
 
 // SetTraceScale sets the display scale to the specified value.
-func (d *Device) SetTraceScale(level int) error {
+func (d *Device) SetTraceScale(level float64) error {
 	d.logger.Info("setting trace scale", "level", level)
-	_, err := d.sendCommand(fmt.Sprintf("trace scale %d", level))
+	_, err := d.sendCommand(fmt.Sprintf("trace scale %.3f", level))
 	return err
 }
