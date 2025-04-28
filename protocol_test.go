@@ -2,12 +2,11 @@ package tinysa
 
 import (
 	"bytes"
-	"log/slog"
 	"testing"
 )
 
 func TestHandleResponse(t *testing.T) {
-	logger := slog.New(slog.NewTextHandler(nil, nil))
+	logger := newNoopLogger()
 
 	tests := []struct {
 		name      string
