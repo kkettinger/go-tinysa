@@ -2,11 +2,12 @@ package tinysa
 
 import (
 	"fmt"
-	"go.bug.st/serial"
 	"log/slog"
 	"regexp"
 	"sync"
 	"time"
+
+	"go.bug.st/serial"
 )
 
 // probeResult contains the parsed response of the `version` command, which is used to detect the tinySA model.
@@ -30,11 +31,7 @@ func probeDevice(logger *slog.Logger, port serial.Port, responseTimeout time.Dur
 	found := false
 	i := 0
 	for i < 3 {
-		response, err := sendCommand(logger, port, "version", responseTimeout)
-		if err != nil {
-			logger.Debug("failed to send version command", "err", err)
-			return probeResult, fmt.Errorf("failed sending version command: %s", err.Error())
-		}
+		response, _ := sendCommand(logger, port, "version", responseTimeout)
 
 		matches := re.FindStringSubmatch(response)
 		if len(matches) == 4 {
