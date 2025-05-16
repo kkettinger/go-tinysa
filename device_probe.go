@@ -18,40 +18,46 @@ type probeResult struct {
 }
 
 // probeDevice tries to detect a tinySA device on the given port, returning a probeResult.
-//
-// We try multiple times to detect the tinySA, because directly after boot we find some malformed output.
-// This helps us detect the tinySA reliably, and also clears the input buffer for further commands.
 func probeDevice(logger *slog.Logger, port serial.Port, responseTimeout time.Duration) (probeResult, error) {
-	var re = regexp.MustCompile(`^(tinySA\w+)_+(\S+)\s*HW Version:(\S+)`)
-
-	var probeResult probeResult
-
 	logger.Debug("probing device")
 
-	found := false
+	// We try multiple times to detect the tinySA, because directly after boot we find some malformed output.
+	// This helps us detect the tinySA reliably and also clears the input buffer for further commands.
 	i := 0
 	for i < 3 {
 		response, _ := sendCommand(logger, port, "version", responseTimeout)
 
-		matches := re.FindStringSubmatch(response)
-		if len(matches) == 4 {
-			found = true
-			probeResult.model = matches[1]
-			probeResult.version = matches[2]
-			probeResult.hwVersion = matches[3]
-			logger.Info("found valid device", "probe_result", probeResult)
-			break
+		if pr, err := parseVersionResponse(response); err == nil {
+			logger.Info("found valid device", "probe_result", pr)
+			return pr, nil
 		}
 
 		i++
 	}
 
-	if !found {
-		logger.Warn("no valid version response found, might not be a tinySA device")
-		return probeResult, fmt.Errorf("no valid version response found, might not be a tinySA device")
+	err := fmt.Errorf("no valid version response found, might not be a tinySA device")
+	logger.Warn(err.Error())
+	return probeResult{}, err
+}
+
+// parseVersionResponse matches the response of the `version` command and returns a probeResult.
+func parseVersionResponse(response string) (probeResult, error) {
+	var re = regexp.MustCompile(`^(tinySA\w+)_v?(\S+)?\s*HW Version:V(.*?)\s*$`)
+
+	matches := re.FindStringSubmatch(response)
+	if len(matches) != 4 {
+		return probeResult{}, fmt.Errorf("invalid probe response")
 	}
 
-	return probeResult, nil
+	if matches[1] == "" {
+		return probeResult{}, fmt.Errorf("invalid probe response")
+	}
+
+	return probeResult{
+		model:     matches[1],
+		version:   matches[2],
+		hwVersion: matches[3],
+	}, nil
 }
 
 // createDeviceFromProbe creates a new *Device from a probeResult.
