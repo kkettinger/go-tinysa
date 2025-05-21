@@ -20,3 +20,17 @@ func (d *Device) EnableAutoSpurRemoval() error {
 	_, err := d.sendCommand("spur auto")
 	return err
 }
+
+// EnableLNA enables the low noise amplifier.
+func (d *Device) EnableLNA() error {
+	d.logger.Info("enabling lna")
+	_, err := d.sendCommand("lna on")
+	return err
+}
+
+// DisableLNA disables the low noise amplifier.
+func (d *Device) DisableLNA() error {
+	d.logger.Info("disabling lna")
+	_, err := d.sendCommand("lna off")
+	return err
+}
