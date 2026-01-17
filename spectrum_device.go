@@ -35,7 +35,7 @@ func (d *Device) GetDeviceID() (uint, error) {
 	}
 
 	parts := strings.Split(res, " ")
-	if len(parts) != 2 && parts[0] != "deviceid" {
+	if len(parts) != 2 || parts[0] != "deviceid" {
 		return 0, fmt.Errorf("unexpected response for deviceid: %s", res)
 	}
 	id, err := strconv.ParseUint(parts[1], 10, 0)
