@@ -32,6 +32,7 @@ func NewDevice(portName string, opts ...DeviceOption) (*Device, error) {
 	// set read timeout
 	if err = port.SetReadTimeout(options.readTimeout); err != nil {
 		logger.Error("failed to set read timeout", "err", err)
+		_ = port.Close()
 		return nil, fmt.Errorf("failed to set read timeout: %s", err.Error())
 	}
 
@@ -40,6 +41,7 @@ func NewDevice(portName string, opts ...DeviceOption) (*Device, error) {
 	pr, err := probeDevice(logger, port, options.responseTimeout)
 	if err != nil {
 		logger.Error("failed to probe device", "err", err)
+		_ = port.Close()
 		return nil, fmt.Errorf("failed to probe device: %s", err.Error())
 	}
 
