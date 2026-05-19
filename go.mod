@@ -1,10 +1,10 @@
 module github.com/kkettinger/go-tinysa
 
-go 1.24.1
+go 1.25.0
 
 require (
 	go.bug.st/serial v1.6.4
-	golang.org/x/image v0.36.0
+	golang.org/x/image v0.40.0
 )
 
 require (
