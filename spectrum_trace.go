@@ -123,6 +123,7 @@ const (
 	traceCalcMaxD   string = "maxd"
 	traceCalcAver4  string = "aver4"
 	traceCalcAver16 string = "aver16"
+	traceCalcAver   string = "aver"
 	traceCalcQuasi  string = "quasi"
 	// traceCalcLog    string = "log"
 	// traceCalcLin    string = "lin"
@@ -144,6 +145,9 @@ var (
 	// TraceCalcAver16 enables running average over 16 samples.
 	TraceCalcAver16 = TraceCalc{traceCalcAver16}
 
+	// TraceCalcAver enables running average over 100 samples.
+	TraceCalcAver = TraceCalc{traceCalcAver}
+
 	// TraceCalcQuasi sets quasi-peak hold mode.
 	TraceCalcQuasi = TraceCalc{traceCalcQuasi}
 
@@ -158,6 +162,7 @@ var traceCalcMap = map[string]TraceCalc{
 	traceCalcMaxD:   TraceCalcMaxD,
 	traceCalcAver4:  TraceCalcAver4,
 	traceCalcAver16: TraceCalcAver16,
+	traceCalcAver:   TraceCalcAver,
 	traceCalcQuasi:  TraceCalcQuasi,
 	//traceCalcLog:    TraceCalcLog,
 	//traceCalcLin:    TraceCalcLin,
@@ -169,6 +174,7 @@ var traceCalcOptions = []string{
 	traceCalcMaxD,
 	traceCalcAver4,
 	traceCalcAver16,
+	traceCalcAver,
 	traceCalcQuasi,
 	// traceCalcLog,
 	// traceCalcLin,

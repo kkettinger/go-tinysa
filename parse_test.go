@@ -413,6 +413,7 @@ func TestTraceCalcFromString(t *testing.T) {
 		{name: "maxd exact case", input: "maxd", expected: TraceCalcMaxD, valid: true},
 		{name: "aver4 exact case", input: "aver4", expected: TraceCalcAver4, valid: true},
 		{name: "aver16 exact case", input: "aver16", expected: TraceCalcAver16, valid: true},
+		{name: "aver exact case", input: "aver", expected: TraceCalcAver, valid: true},
 		{name: "quasi exact case", input: "quasi", expected: TraceCalcQuasi, valid: true},
 
 		// Valid inputs with different case
@@ -421,6 +422,7 @@ func TestTraceCalcFromString(t *testing.T) {
 		{name: "maxd lowercase", input: "maxd", expected: TraceCalcMaxD, valid: true},
 		{name: "AVER4 uppercase", input: "AVER4", expected: TraceCalcAver4, valid: true},
 		{name: "Aver16 title case", input: "Aver16", expected: TraceCalcAver16, valid: true},
+		{name: "AVER uppercase", input: "AVER", expected: TraceCalcAver, valid: true},
 		{name: "QUASI uppercase", input: "QUASI", expected: TraceCalcQuasi, valid: true},
 
 		// Invalid inputs
