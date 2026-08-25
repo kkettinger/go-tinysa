@@ -6,6 +6,11 @@
 
 # go-tinysa
 
+> **Local fork note:** this form adds `NewDeviceTCP()`, a way to connect to a tinySA whose serial
+> port is bridged to the network via a tool like `socat` (see [Connecting over TCP](#connecting-over-tcp)
+> below), for cases where the device isn't attached to the machine running this code. Everything else is
+> unchanged from [kkettinger/go-tinysa](https://github.com/kkettinger/go-tinysa).
+
 `go-tinysa` is an SDK for controlling and interacting with the [tinySA](https://www.tinysa.org/) spectrum analyzer via
 its USB serial interface. It contains methods that allows you to:
 
@@ -56,6 +61,22 @@ To directly connect to a device, use the `NewDevice()` method:
 ```go
 dev, _ := tinysa.NewDevice("/dev/ttyACM0")
 ```
+
+### Connecting over TCP
+
+If the tinySA isn't attached to the machine running this code, you can bridge its serial port to the
+network with [socat](http://www.dest-unreach.org/socat/) (or similar) and connect to it with `NewDeviceTCP()`:
+
+```
+socat /dev/cu.usbmodem4001,raw,echo=0,ispeed=115200,ospeed=115200 TCP-LISTEN:9001,reuseaddr,fork
+```
+
+```go
+dev, _ := tinysa.NewDeviceTCP("localhost:9001")
+```
+
+It accepts the same `DeviceOption`s as `NewDevice()`/`FindDevice()` (`WithReadTimeout`, `WithResponseTimeout`,
+`WithLogger`); `WithBaudRate` is accepted but has no effect since the baud rate is fixed on the bridge side.
 
 To have more insight about what happens inside, you can pass on a logger instance:
 

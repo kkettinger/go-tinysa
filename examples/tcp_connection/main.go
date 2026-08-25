@@ -3,14 +3,15 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/cjheath/go-tinysa"
-	"time"
 )
 
+// This connects to a tinySA that has its serial port bridged to TCP by socat, e.g.:
+//
+//	socat /dev/cu.usbmodem4001,raw,echo=0,ispeed=115200,ospeed=115200 TCP-LISTEN:9001,reuseaddr,fork
 func main() {
-	dev, err := tinysa.FindDevice(
-		tinysa.WithBaudRate(9600),
-		tinysa.WithReadTimeout(500*time.Millisecond))
+	dev, err := tinysa.NewDeviceTCP("localhost:9001")
 	if err != nil {
 		panic(err)
 	}

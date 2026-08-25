@@ -2,7 +2,7 @@
 package main
 
 import (
-	"github.com/kkettinger/go-tinysa"
+	"github.com/cjheath/go-tinysa"
 )
 
 func main() {

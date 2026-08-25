@@ -6,8 +6,6 @@ import (
 	"regexp"
 	"sync"
 	"time"
-
-	"go.bug.st/serial"
 )
 
 // probeResult contains the parsed response of the `version` command, which is used to detect the tinySA model.
@@ -18,7 +16,7 @@ type probeResult struct {
 }
 
 // probeDevice tries to detect a tinySA device on the given port, returning a probeResult.
-func probeDevice(logger *slog.Logger, port serial.Port, responseTimeout time.Duration) (probeResult, error) {
+func probeDevice(logger *slog.Logger, port transport, responseTimeout time.Duration) (probeResult, error) {
 	logger.Debug("probing device")
 
 	// We try multiple times to detect the tinySA, because directly after boot we find some malformed output.
@@ -61,7 +59,7 @@ func parseVersionResponse(response string) (probeResult, error) {
 }
 
 // createDeviceFromProbe creates a new *Device from a probeResult.
-func createDeviceFromProbe(logger *slog.Logger, port serial.Port, pr probeResult, opts deviceOptions) (*Device, error) {
+func createDeviceFromProbe(logger *slog.Logger, port transport, pr probeResult, opts deviceOptions) (*Device, error) {
 	cfg, ok := deviceModels[pr.model]
 	if !ok {
 		logger.Error("unknown model", "model", pr.model)
