@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/cjheath/go-tinysa"
+	"github.com/kketinger/go-tinysa"
 )
 
 func main() {

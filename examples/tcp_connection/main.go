@@ -4,7 +4,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/cjheath/go-tinysa"
+	"github.com/kketinger/go-tinysa"
 )
 
 // This connects to a tinySA that has its serial port bridged to TCP by socat, e.g.:

@@ -1,4 +1,4 @@
-module github.com/cjheath/go-tinysa
+module github.com/kketinger/go-tinysa
 
 go 1.25.0
 
