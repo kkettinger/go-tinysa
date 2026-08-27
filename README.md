@@ -6,11 +6,6 @@
 
 # go-tinysa
 
-> **Local fork note:** this form adds `NewDeviceTCP()`, a way to connect to a tinySA whose serial
-> port is bridged to the network via a tool like `socat` (see [Connecting over TCP](#connecting-over-tcp)
-> below), for cases where the device isn't attached to the machine running this code. Everything else is
-> unchanged from [kkettinger/go-tinysa](https://github.com/kkettinger/go-tinysa).
-
 `go-tinysa` is an SDK for controlling and interacting with the [tinySA](https://www.tinysa.org/) spectrum analyzer via
 its USB serial interface. It contains methods that allows you to:
 

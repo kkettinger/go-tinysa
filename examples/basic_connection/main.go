@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/kketinger/go-tinysa"
+	"github.com/kkettinger/go-tinysa"
 	"time"
 )
 
