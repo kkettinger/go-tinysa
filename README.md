@@ -72,6 +72,8 @@ dev, _ := tinysa.NewDeviceTCP("localhost:9001")
 It accepts the same `DeviceOption`s as `NewDevice()`/`FindDevice()` (`WithReadTimeout`, `WithResponseTimeout`,
 `WithLogger`); `WithBaudRate` is accepted but has no effect since the baud rate is fixed on the bridge side.
 
+### Logger
+
 To have more insight about what happens inside, you can pass on a logger instance:
 
 ```go
@@ -82,6 +84,8 @@ logger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
 dev, _ := tinysa.FindDevice(
     tinysa.WithLogger(logger))
 ```
+
+Internally only `LevelInfo` and `LevelDebug` is used.
 
 ## Examples
 
@@ -148,5 +152,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 
-- The tinySA team for creating a great spectrum analyzer
-- Contributors to the Go serial library
+- The tinySA team for creating a great spectrum analyzer.
+- Contributors to the Go serial library.
