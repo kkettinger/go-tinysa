@@ -39,20 +39,25 @@ func probeDevice(logger *slog.Logger, port transport, responseTimeout time.Durat
 }
 
 // parseVersionResponse matches the response of the `version` command and returns a probeResult.
+//
+// The stock firmware responds with `<model>_v<version>\r\nHW Version:V<hwVersion>`. A custom firmware build may
+// omit the model prefix and only report `<version>\r\nHW Version:V<hwVersion>`; as only the tinySA Ultra reports a
+// hardware version, the model defaults to tinySA4 in that case.
 func parseVersionResponse(response string) (probeResult, error) {
-	var re = regexp.MustCompile(`^(tinySA\w+)_v?(\S+)?\s*HW Version:V(.*?)\s*$`)
+	var re = regexp.MustCompile(`^(?:(tinySA\w*)_v?)?(\S+)?\s*HW Version:V(.*?)\s*$`)
 
 	matches := re.FindStringSubmatch(response)
 	if len(matches) != 4 {
 		return probeResult{}, fmt.Errorf("invalid probe response")
 	}
 
-	if matches[1] == "" {
-		return probeResult{}, fmt.Errorf("invalid probe response")
+	model := matches[1]
+	if model == "" {
+		model = string(ModelUltra)
 	}
 
 	return probeResult{
-		model:     matches[1],
+		model:     model,
 		version:   matches[2],
 		hwVersion: matches[3],
 	}, nil

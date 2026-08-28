@@ -40,6 +40,22 @@ func TestMatchProbeResponse(t *testing.T) {
 			expectError: false,
 		},
 		{
+			name:  "response with custom flashed firmware (no model prefix)",
+			input: "0.4.5.1\r\nHW Version:V0.4.5.1 ",
+			want: probeResult{
+				model:     "tinySA4",
+				version:   "0.4.5.1",
+				hwVersion: "0.4.5.1",
+			},
+			expectError: false,
+		},
+		{
+			name:        "garbage response",
+			input:       "foo bar",
+			want:        probeResult{},
+			expectError: true,
+		},
+		{
 			name:        "empty response",
 			input:       "",
 			want:        probeResult{},
