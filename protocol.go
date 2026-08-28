@@ -7,8 +7,6 @@ import (
 	"io"
 	"log/slog"
 	"time"
-
-	"go.bug.st/serial"
 )
 
 const (
@@ -23,7 +21,7 @@ const (
 )
 
 // sendCommand wraps sendCommandBinary, converting its []byte response to a string.
-func sendCommand(logger *slog.Logger, port serial.Port, cmd string, responseTimeout time.Duration) (string, error) {
+func sendCommand(logger *slog.Logger, port transport, cmd string, responseTimeout time.Duration) (string, error) {
 	response, err := sendCommandBinary(logger, port, cmd, responseTimeout)
 	if err != nil {
 		return "", err
@@ -32,7 +30,7 @@ func sendCommand(logger *slog.Logger, port serial.Port, cmd string, responseTime
 }
 
 // sendCommandBinary sends a command to the tinySA and handles both string and binary responses.
-func sendCommandBinary(logger *slog.Logger, port serial.Port, cmd string, responseTimeout time.Duration) ([]byte, error) {
+func sendCommandBinary(logger *slog.Logger, port transport, cmd string, responseTimeout time.Duration) ([]byte, error) {
 	fullCmd := cmd + commandTerminator
 
 	logger.Debug("sending command", "cmd", cmd)
@@ -103,7 +101,7 @@ func handleResponse(logger *slog.Logger, fullCmd string, response []byte) ([]byt
 }
 
 // sendCommandAndRead sends a request over the serial port and reads the response.
-func sendCommandAndRead(logger *slog.Logger, port serial.Port, fullCmd string, responseTimeout time.Duration) (bytes.Buffer, error) {
+func sendCommandAndRead(logger *slog.Logger, port transport, fullCmd string, responseTimeout time.Duration) (bytes.Buffer, error) {
 	logger.Debug("sending full command", "cmd", fullCmd)
 	if _, err := port.Write([]byte(fullCmd)); err != nil {
 		logger.Error("failed to write command", "cmd", fullCmd, "err", err)

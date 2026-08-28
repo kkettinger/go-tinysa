@@ -2,15 +2,25 @@
 package tinysa
 
 import (
-	"go.bug.st/serial"
+	"io"
 	"log/slog"
 	"sync"
 	"time"
 )
 
+// transport is the minimal set of operations Device needs from its underlying connection.
+// A go.bug.st/serial.Port satisfies this interface directly (structurally); tcpTransport
+// implements it over a plain TCP connection to a serial-to-TCP bridge (e.g. socat).
+type transport interface {
+	io.Reader
+	io.Writer
+	io.Closer
+	SetReadTimeout(t time.Duration) error
+}
+
 // Device represents a connected device instance with associated configuration and state.
 type Device struct {
-	port            serial.Port   // Serial port used for communication
+	port            transport     // Underlying connection (serial port or TCP bridge) used for communication
 	mutex           sync.Mutex    // Mutex to ensure thread-safe access to the device
 	model           Model         // Device model (basic or ultra)
 	version         string        // Firmware version of the device
