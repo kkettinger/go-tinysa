@@ -2,7 +2,6 @@
 [![Golang CI Lint](https://github.com/kkettinger/go-tinysa/actions/workflows/lint.yml/badge.svg)](https://github.com/kkettinger/go-tinysa/actions/workflows/lint.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/kkettinger/go-tinysa.svg)](https://pkg.go.dev/github.com/kkettinger/go-tinysa)
 [![License: MIT](https://img.shields.io/github/license/kkettinger/go-tinysa)](/LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/kkettinger/go-tinysa)](https://goreportcard.com/report/github.com/kkettinger/go-tinysa)
 
 # go-tinysa
 
@@ -83,8 +82,6 @@ logger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
 dev, _ := tinysa.FindDevice(
     tinysa.WithLogger(logger))
 ```
-
-Internally only `LevelInfo` and `LevelDebug` is used.
 
 ## Examples
 
